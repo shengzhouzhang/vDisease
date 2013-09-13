@@ -6,6 +6,7 @@ function affect(sigInst, options) {
   var infectious = [];
   var recovered = [];
   var i, index;
+  var timer = 0;
   
   var update = function() {
     
@@ -47,6 +48,8 @@ function affect(sigInst, options) {
       }
       
     }).draw(2, 2, 2);
+    
+    updateInfo({s: susceptible.length, e: exposed.length, i: infectious.length, r: recovered.length, days: timer});
   };
   
   // initial attributes
@@ -78,10 +81,35 @@ function affect(sigInst, options) {
       }
     });
     
+    timer++;
+    
     update();
     
-    //console.log(susceptible.length + exposed.length + infectious.length + recovered.length);
-    
   }, 2000);
-  
 }
+
+function updateInfo(options) {
+  
+  //console.log($("span.nodes"));
+  
+  if (options.nodes !== undefined)
+    $("#nodes").html(options.nodes);
+  
+  if (options.edges !== undefined)
+    $("#edges").html(options.edges);
+  
+  if (options.days !== undefined)
+    $("#days").html(options.days);
+  
+  if (options.s !== undefined)
+    $("#susceptible").html(options.s);
+  
+  if (options.e !== undefined)
+    $("#exposed").html(options.e);
+  
+  if (options.i !== undefined)
+    $("#infectious").html(options.i);
+  
+  if (options.r !== undefined)
+    $("#recovered").html(options.r);
+};

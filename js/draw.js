@@ -14,7 +14,16 @@ function draw(nodes, edges, options) {
     maxRatio: 30
   });
   
-  var i, R = 200, j = 0, L = nodes.length;
+  var i, R = 200, j = 0, L = nodes.length, l, d;
+  
+  l = parseInt($("input[id=l]").val());
+  d = parseInt($("input[id=d]").val());
+  
+  if (!isNumber(l) || !isNumber(d)) {
+   
+   alert("Please type a number!!");
+   return; 
+  }
     
   for (i = 0; i < nodes.length; i++) {
     
@@ -26,8 +35,8 @@ function draw(nodes, edges, options) {
       //y: Math.random(),
       size: nodes.length >= 500 ? 3 : 5,
       color: options.colors.length === nodes.length ? options.colors[i] : "green",
-      l: 3, 
-      d: 5, 
+      l: l, 
+      d: d, 
       timer: 0
     });
   }
@@ -50,6 +59,8 @@ function draw(nodes, edges, options) {
     
     renderTime = renderTime * (nodes.length / threshold);
   }
+  
+  updateInfo({nodes: nodes.length, edges: edges.length});
   
   sigInst.startForceAtlas2();
     
@@ -130,3 +141,7 @@ function randomColor() {
                       Math.round(Math.random()*256)+','+
                       Math.round(Math.random()*256)+')';
 };
+
+function isNumber(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+}

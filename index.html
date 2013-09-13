@@ -37,26 +37,34 @@
             <form class="form-horizontal">
               <div class="control-group">
                 <legend>Source File</legend>
-                <input id="file" type="file" name="files[]" title="Select File" multiple /> 
+                <input id="file" type="file" name="files[]" title="Select File" multiple />
+                <p></P>
+                <button class="btn start">Start</button>
               </div>
               <div class="control-group">
-                <legend>Affact Attributes</legend>
+                <legend>Attributes</legend>
                 <label>L</label>
                 <input id="l" type="text" placeholder="Type a Number…">
                 <label>D</label>
                 <input id="d" type="text" placeholder="Type a Number…">
               </div>
-              <div class="control-group">
-                <legend>Display Attributes</legend>
-                <label>Size</label>
-                <input type="text" placeholder="Type a Number…">
-                <label>Color</label>
-                <input type="text" placeholder="Type a Number…">
-              </div>
             </form>
           </div>
         </div>
         <div class="span9">
+          <div class="alert alert-info">
+            <table class="info">
+              <tr>
+                <td><span>Nodes:</span><span id="nodes"></span></td>
+                <td><span>Edges:</span><span id="edges"></span></td>
+                <td><span>Days:</span><span id="days"></span></td>
+                <td><span>S:</span><span id="susceptible"></span></td>
+                <td><span>E:</span><span id="exposed"></span></td>
+                <td><span>I:</span><span id="infectious"></span></td>
+                <td><span>R:</span><span id="recovered"></span></td>
+              </tr>
+            </table>
+          </div>
           <div id="canvas"></div>
         </div>
       </div>

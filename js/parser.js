@@ -34,29 +34,23 @@ function fileSelection(event) {
         if (nodes.indexOf(values[0]) === -1) {
           
           nodes.push(values[0]);
-          
-          /*
-          // color
-          if (values[3])
-            options.colors.push(values[3]);
-          */
         }
         
         if (nodes.indexOf(values[1]) === -1) {
           
           nodes.push(values[1]);
-          
-          /*
-          // color
-          if (values[4])
-            options.colors.push(values[4]);
-          */
         }
         
         edges.push([values[0], values[1], 0.7]);
       });
       
-      draw(nodes, edges, options);
+      // start event
+      $("button.start").click(function(event) {
+      
+        event.preventDefault();
+        
+        draw(nodes, edges, options);
+      });
     };
     
     // Read in the image file as a data URL.
