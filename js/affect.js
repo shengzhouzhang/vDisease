@@ -43,11 +43,13 @@ function affect(sigInst, options) {
         
       } else if ((index = recovered.indexOf(node.id)) >= 0) {
         
-        node.color = "grey";
+        node.color = "blue";
         node.attr.timer = 0;
       }
       
-    }).draw(2, 2, 2);
+    });
+    
+    sigInst.draw();
     
     updateInfo({s: susceptible.length, e: exposed.length, i: infectious.length, r: recovered.length, days: timer});
   };
@@ -66,31 +68,34 @@ function affect(sigInst, options) {
     }
   });
   
+  // start infection
   update();
   
   setInterval(function() {
     
-    sigInst.iterEdges(function(e) {
+    if (attrs.stop != 2) {
       
-      if(infectious.indexOf(e.source) >= 0 && 
-         (index = susceptible.indexOf(e.target)) >= 0 &&
-         Math.random() < e.attr.probability) {
+      sigInst.iterEdges(function(e) {
         
-        susceptible.splice(index, 1);
-        exposed.push(e.target);
-      }
-    });
-    
-    timer++;
-    
-    update();
+        if(infectious.indexOf(e.source) >= 0 && 
+           (index = susceptible.indexOf(e.target)) >= 0 &&
+           Math.random() < e.attr.probability) {
+          
+          susceptible.splice(index, 1);
+          exposed.push(e.target);
+        }
+      });
+      
+      timer++;
+      
+      // infection
+      update();
+    }
     
   }, 2000);
 }
 
 function updateInfo(options) {
-  
-  //console.log($("span.nodes"));
   
   if (options.nodes !== undefined)
     $("#nodes").html(options.nodes);

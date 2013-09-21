@@ -1,7 +1,6 @@
 function draw(nodes, edges, options) {
   
   var threshold = 2000;
-  var renderTime = 7000;
   
   var sigInst = sigma.init(document.getElementById('canvas')).drawingProperties({
     defaultLabelColor: '#fff',
@@ -16,70 +15,42 @@ function draw(nodes, edges, options) {
   
   var i, R = 200, j = 0, L = nodes.length, l, d;
   
-  l = parseInt($("input[id=l]").val());
-  d = parseInt($("input[id=d]").val());
-  
-  if (!isNumber(l) || !isNumber(d)) {
-   
-   alert("Please type a number!!");
-   return; 
-  }
+  attrs.counter = 0;
     
   for (i = 0; i < nodes.length; i++) {
     
     sigInst.addNode(nodes[i], {
       label: nodes[i],
-      x: Math.cos(Math.PI*(j++)/L)*R,
-      y: Math.sin(Math.PI*(j++)/L)*R,
-      //x: Math.random(),
-      //y: Math.random(),
+      x: positionX(),
+      y: positionY(),
       size: nodes.length >= 500 ? 3 : 5,
-      color: options.colors.length === nodes.length ? options.colors[i] : "green",
-      l: l, 
-      d: d, 
+      color: "green",
+      l: attrs.l, 
+      d: attrs.d, 
       timer: 0
     });
   }
   
   for(i = 0; i < edges.length; i++) {
     
-    sigInst.addEdge(i, edges[i][0], edges[i][1], {size: 2, probability: edges[i][2]});
-  }
-  
-  //sigInst.position(0,0,1).draw();
-  
-  if (nodes.length > threshold) {
-    
-    /*
-    sigInst.iterNodes(function(n) {
-      
-      n.hidden = true;
-    });
-    */
-    
-    renderTime = renderTime * (nodes.length / threshold);
+    sigInst.addEdge(i, edges[i][0], edges[i][1], {size: 2, probability: edges[i][2], hidden: true});
   }
   
   updateInfo({nodes: nodes.length, edges: edges.length});
   
-  sigInst.startForceAtlas2();
+  attrs.sigInst = sigInst;
+  
+  if (attrs.layout === "ForceAtlas2") {
     
-  setTimeout(function(){
+    sigInst.startForceAtlas2();
+    attrs.forceAtlas2 = true;
+  } else {
     
-    if (nodes.length > threshold)
-      sigInst.iterNodes(function(n) {
-        
-        n.hidden = false;
-      });
-    
-    sigInst.stopForceAtlas2();
-    
-    affect(sigInst, {inits: ["81"]});
-    
-  }, renderTime);
+    sigInst.position(0,0,1).draw();
+    attrs.forceAtlas2 = false;
+  }
   
   //showNeighbor (sigInst)
-    
 };
 
 function showNeighbor (sigInst) {
@@ -135,6 +106,32 @@ function showNeighbor (sigInst) {
 
 };
 
+function positionX() {
+  
+  switch(attrs.layout) {
+      
+    case "ForceAtlas2":
+      return Math.cos(Math.PI*(attrs.counter++)/attrs.nodes.length)*attrs.R;
+    case "Circle":
+      return Math.cos(Math.PI*(attrs.counter++)/attrs.nodes.length)*attrs.R;
+    default:
+      return Math.random();
+  }
+};
+
+function positionY() {
+  
+  switch(attrs.layout) {
+      
+    case "ForceAtlas2":
+      return Math.sin(Math.PI*(attrs.counter++)/attrs.nodes.length)*attrs.R;
+    case "Circle":
+      return Math.sin(Math.PI*(attrs.counter++)/attrs.nodes.length)*attrs.R;
+    default:
+      return Math.random();
+  }
+};
+
 function randomColor() {
   
   return 'rgb('+Math.round(Math.random()*256)+','+
@@ -143,5 +140,6 @@ function randomColor() {
 };
 
 function isNumber(n) {
+  
   return !isNaN(parseFloat(n)) && isFinite(n);
-}
+};

@@ -7,6 +7,7 @@
     <link href="css/main.css" rel="stylesheet" media="screen">
     <link href="libs/bootstrap/css/bootstrap.css" rel="stylesheet" media="screen">
     <link href="libs/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="libs/slider/css/slider.css" rel="stylesheet">
   </head>
   <body>
 
@@ -38,15 +39,27 @@
               <div class="control-group">
                 <legend>Source File</legend>
                 <input id="file" type="file" name="files[]" title="Select File" multiple />
-                <p></P>
-                <button class="btn start">Start</button>
+              </div>
+              <div class="control-group">
+                <legend>Graph</legend>
+                <select class="layout">
+                  <option selected="selected">ForceAtlas2</option>
+                  <option>Circle</option>
+                  <option>Random</option>
+                </select>
+                <p></p>
+                <button class="btn showEdges btn-block">Show Edges</button>
+                <button class="btn rescale btn-block">Rescale</button>
               </div>
               <div class="control-group">
                 <legend>Attributes</legend>
                 <label>L</label>
-                <input id="l" type="text" placeholder="Type a Number…">
+                <input type="text" id="l" value="" data-slider-min="1" data-slider-max="10" data-slider-step="1" data-slider-value="3" data-slider-orientation="horizontal" data-slider-selection="before">
+                
                 <label>D</label>
-                <input id="d" type="text" placeholder="Type a Number…">
+                <input type="text" id="d" value="" data-slider-min="1" data-slider-max="10" data-slider-step="1" data-slider-value="5" data-slider-orientation="horizontal" data-slider-selection="before">
+                <p></p>
+                <button class="btn start btn-block">Start Infection</button>
               </div>
             </form>
           </div>
@@ -65,7 +78,11 @@
               </tr>
             </table>
           </div>
-          <div id="canvas"></div>
+          <div class="well">
+            <div id="canvas">
+            </div>
+          </div>
+          
         </div>
       </div>
 
@@ -75,12 +92,13 @@
     
     <script src="libs/bootstrap/js/bootstrap.min.js"></script>
     <script src="libs/bootstrap/js/bootstrap_file_input.js"></script>
-    <script src="libs/sigma.min.js"></script>
+    <script src="libs/slider/js/bootstrap-slider.js"></script>    <script src="libs/sigma.min.js"></script>
     <script src="libs/sigma.forceatlas2.js"></script>
+    <script src="js/attrs.js"></script>
     <script src="js/test.js"></script>
     <script src="js/affect.js"></script>
     <script src="js/draw.js"></script>
-    <script src="js/parser.js"></script>
+    <script src="js/file.js"></script>
     <script src="js/main.js"></script>
 
   
