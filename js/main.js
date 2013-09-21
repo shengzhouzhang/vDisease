@@ -122,8 +122,11 @@ $(document).ready(function() {
     if (attrs.sigInst === undefined || attrs.sigInst === null)
       return;
     
-    if (!start)
+    if (!start) {
+      
       affect(attrs.sigInst, {inits: ["81"]});
+      start = true;
+    }
     
   });
   
