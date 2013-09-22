@@ -13,6 +13,22 @@ function draw(nodes, edges, options) {
     maxRatio: 30
   });
   
+  if (attrs.layout === "ForceAtlas2 (LinLin Mode)") {
+    
+    attrs.linLogMode = false;
+    attrs.layout = "ForceAtlas2";
+    
+  } else if (attrs.layout === "ForceAtlas2 (Strong Gravity)"){
+    
+    attrs.strongGravityMode = true;
+    attrs.layout = "ForceAtlas2";
+    
+  } else if (attrs.layout === "ForceAtlas2") {
+    
+    attrs.strongGravityMode = false;
+    attrs.linLogMode = true;
+  }
+  
   var i, R = 200, j = 0, L = nodes.length, l, d;
   
   attrs.counter = 0;
@@ -25,30 +41,47 @@ function draw(nodes, edges, options) {
       y: positionY(),
       size: nodes.length >= 500 ? 3 : 5,
       color: "green",
+      forceLabel: attrs.forceLables,
       l: attrs.l, 
       d: attrs.d, 
       timer: 0
     });
   }
   
-  for(i = 0; i < edges.length; i++) {
+  if (attrs.layout === "ForceAtlas2") {
     
-    sigInst.addEdge(i, edges[i][0], edges[i][1], {size: 2, probability: edges[i][2], hidden: true});
+    attrs.showEdges = false;
+    $('#showEdge').bootstrapSwitch('setState', false);
   }
   
-  updateInfo({nodes: nodes.length, edges: edges.length});
+  for(i = 0; i < edges.length; i++) {
+    
+    sigInst.addEdge(i, edges[i][0], edges[i][1], {
+      size: 2, 
+      probability: edges[i][2], 
+      weight: edges[i][2], 
+      hidden: !attrs.showEdges
+    });
+  }
   
   attrs.sigInst = sigInst;
   
   if (attrs.layout === "ForceAtlas2") {
     
-    sigInst.startForceAtlas2();
+    sigInst.startForceAtlas2({
+      strongGravityMode: attrs.strongGravityMode,
+      linLogMode: attrs.linLogMode,
+      edgeWeightInfluence: attrs.edgeWeightInfluence
+    });
     attrs.forceAtlas2 = true;
+    
   } else {
     
     sigInst.position(0,0,1).draw();
     attrs.forceAtlas2 = false;
   }
+  
+  updateInfo({nodes: nodes.length, edges: edges.length});
   
   //showNeighbor (sigInst)
 };
@@ -110,12 +143,10 @@ function positionX() {
   
   switch(attrs.layout) {
       
-    case "ForceAtlas2":
-      return Math.cos(Math.PI*(attrs.counter++)/attrs.nodes.length)*attrs.R;
-    case "Circle":
-      return Math.cos(Math.PI*(attrs.counter++)/attrs.nodes.length)*attrs.R;
-    default:
+    case "Random":
       return Math.random();
+    default:
+      return Math.cos(Math.PI*(attrs.counter++)/attrs.nodes.length)*attrs.R;
   }
 };
 
@@ -123,12 +154,10 @@ function positionY() {
   
   switch(attrs.layout) {
       
-    case "ForceAtlas2":
-      return Math.sin(Math.PI*(attrs.counter++)/attrs.nodes.length)*attrs.R;
-    case "Circle":
-      return Math.sin(Math.PI*(attrs.counter++)/attrs.nodes.length)*attrs.R;
-    default:
+    case "Random":
       return Math.random();
+    default:
+      return Math.sin(Math.PI*(attrs.counter++)/attrs.nodes.length)*attrs.R;
   }
 };
 

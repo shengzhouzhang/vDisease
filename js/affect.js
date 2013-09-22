@@ -92,7 +92,7 @@ function affect(sigInst, options) {
       update();
     }
     
-  }, 2000);
+  }, attrs.interval);
 }
 
 function updateInfo(options) {

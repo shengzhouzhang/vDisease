@@ -335,7 +335,7 @@ sigma.forceatlas2.ForceAtlas2 = function(graph) {
   }
 
   // Auto Settings
-  this.setAutoSettings = function() {
+  this.setAutoSettings = function(options) {
     var graph = this.graph;
 
     // Tuning
@@ -344,14 +344,26 @@ sigma.forceatlas2.ForceAtlas2 = function(graph) {
     } else {
       this.p.scalingRatio = 10.0;
     }
-    this.p.strongGravityMode = false;
+    this.p.strongGravityMode = options.strongGravityMode || false;
     this.p.gravity = 1;
 
     // Behavior
     this.p.outboundAttractionDistribution = true;
-    this.p.linLogMode = true;
+    this.p.linLogMode = options.linLogMode || false;
     this.p.adjustSizes = false;
-    this.p.edgeWeightInfluence = 1;
+    this.p.edgeWeightInfluence = options.edgeWeightInfluence || 1;
+    
+    //console.log(this.p.strongGravityMode);
+    
+    //var obj = this;
+    
+    /*
+    setTimeout(function(){
+      
+      obj.p.strongGravityMode = true;
+      console.log(obj.p.strongGravityMode);
+    }, 10000);
+    */
 
     // Performance
     if (graph.nodes.length >= 50000) {
@@ -930,18 +942,27 @@ sigma.forceatlas2.Region.prototype.applyForce = function(n, Force, theta) {
   }
 };
 
-sigma.publicPrototype.startForceAtlas2 = function() {
+sigma.publicPrototype.startForceAtlas2 = function(options) {
   //if(!this.forceatlas2) {
     this.forceatlas2 = new sigma.forceatlas2.ForceAtlas2(this._core.graph);
-    this.forceatlas2.setAutoSettings();
+    this.forceatlas2.setAutoSettings(options || {});
     this.forceatlas2.init();
   //}
+  
+  console.log("ForceAtlas2 Start");
 
   this.addGenerator('forceatlas2', this.forceatlas2.atomicGo, function(){
     return true;
   });
 };
 
+sigma.publicPrototype.changeSettings = function(options) {
+  
+  this.forceatlas2.setAutoSettings(options || {});
+}
+
 sigma.publicPrototype.stopForceAtlas2 = function() {
   this.removeGenerator('forceatlas2');
+  
+  console.log("ForceAtlas2 Stop");
 };

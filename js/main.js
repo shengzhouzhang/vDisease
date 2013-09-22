@@ -1,8 +1,6 @@
 $(document).ready(function() {
   
   //generateTestCase();
-  
-  var showEdges = false;
   var start = false;
   
   $("select.layout").change(function() {
@@ -11,99 +9,158 @@ $(document).ready(function() {
     
     if (attrs.sigInst !== null) {
       
-      attrs.counter = 0;
+      switch (attrs.layout) {
+          
+        case "ForceAtlas2 (LinLin Mode)":
+          attrs.strongGravityMode = false;
+          attrs.linLogMode = false;
+          attrs.edgeWeightInfluence = 1;
+          break;
+        case "ForceAtlas2 (Strong Gravity)":
+          attrs.strongGravityMode = true;
+          attrs.linLogMode = true;
+          attrs.edgeWeightInfluence = 1;
+          break;
+        default:
+          attrs.strongGravityMode = false;
+          attrs.linLogMode = true;
+          attrs.edgeWeightInfluence = 1;
+          break;
+      }
       
-      attrs.sigInst.iterNodes(function(n){
+      if (attrs.layout === "ForceAtlas2" || 
+          attrs.layout === "ForceAtlas2 (LinLin Mode)" ||
+          attrs.layout === "ForceAtlas2 (Strong Gravity)") {
         
-        n.x = positionX();
-        n.y = positionY();
-      });
-      
-      if (attrs.layout === "ForceAtlas2") {
+        console.log(attrs.layout);
         
         if (!attrs.forceAtlas2) {
-
-          // enable forceAtlas2
-          attrs.sigInst.startForceAtlas2();
+        
+          attrs.counter = 0;
+          
+          attrs.sigInst.iterNodes(function(n){
+            
+            n.x = positionX();
+            n.y = positionY();
+          });
+          
+          attrs.sigInst.startForceAtlas2({
+            strongGravityMode: attrs.strongGravityMode,
+            linLogMode: attrs.linLogMode,
+            edgeWeightInfluence: attrs.edgeWeightInfluence
+          });
+          
           attrs.forceAtlas2 = true;
           
-          // hide edges
-          if (showEdges) {
-            
-            attrs.sigInst.iterEdges(function(e) {
-              
-              e.hidden = true;
-            });
-            
-            if (attrs.layout === "ForceAtlas2" && !attrs.forceAtlas2) {
-              
-              attrs.sigInst.startForceAtlas2();
-              attrs.forceAtlas2 = true;
-            }
-            
-            $("button.showEdges").text("Show Edges");
-            showEdges = false;
-          }
+        } else {
+          
+          attrs.sigInst.changeSettings({
+            strongGravityMode: attrs.strongGravityMode,
+            linLogMode: attrs.linLogMode,
+            edgeWeightInfluence: attrs.edgeWeightInfluence
+          });
+        }
+      } else {
+        
+        attrs.counter = 0;
+        
+        console.log(attrs.layout);
+        
+        attrs.sigInst.iterNodes(function(n){
+          
+          n.x = positionX();
+          n.y = positionY();
+        });
+        
+        if (attrs.forceAtlas2) {
+          
+          attrs.sigInst.changeSettings({
+            strongGravityMode: attrs.strongGravityMode,
+            linLogMode: attrs.linLogMode,
+            edgeWeightInfluence: attrs.edgeWeightInfluence
+          });
+          
+          attrs.sigInst.stopForceAtlas2();
+          attrs.forceAtlas2 = false;
         }
         
-      } else {
+        attrs.sigInst.position(0,0,1).draw();
+      }
+    }
+  });
+  
+  $("#showEdges input").change(function(event){
+    
+    event.preventDefault();
+    
+    if (attrs.showEdges) {
+      
+      attrs.showEdges = false;
+    } else {
+      
+      attrs.showEdges = true;
+    }
+    
+    if (attrs.sigInst !== undefined && attrs.sigInst !== null) {
+      
+      attrs.sigInst.iterEdges(function(e) {
+        
+        e.hidden = !attrs.showEdges;
+      });
+      
+      if (attrs.showEdges) {
         
         if (attrs.forceAtlas2) {
           
           attrs.sigInst.stopForceAtlas2();
           attrs.forceAtlas2 = false;
         }
+
+      } else {
+        
+        if (!attrs.forceAtlas2) {
+          
+          attrs.sigInst.startForceAtlas2({
+            strongGravityMode: attrs.strongGravityMode,
+            linLogMode: attrs.linLogMode,
+            edgeWeightInfluence: attrs.edgeWeightInfluence
+          });
+          
+          attrs.forceAtlas2 = true;
+        }
       }
       
-      attrs.sigInst.position(0,0,1).draw();
+      attrs.sigInst.draw(2, 2, 2);
     }
   });
   
-  $("button.showEdges").click(function(event) {
-    
+  $("#forceLabels input").change(function(event) {
+  
     event.preventDefault();
     
-    if (attrs.sigInst === undefined || attrs.sigInst === null)
-      return;
-    
-    if (showEdges) {
+    if (attrs.forceLables) {
       
-      attrs.sigInst.iterEdges(function(e) {
-        
-        e.hidden = true;
-      });
-      
-      if (attrs.layout === "ForceAtlas2" && !attrs.forceAtlas2) {
-        
-        attrs.sigInst.startForceAtlas2();
-        attrs.forceAtlas2 = true;
-      }
-      
-      $(this).text("Show Edges");
-      showEdges = false;
+      attrs.forceLables = false;
     } else {
       
-      attrs.sigInst.iterEdges(function(e) {
-        
-        e.hidden = false;
-      });
-      
-      if (attrs.layout === "ForceAtlas2" && attrs.forceAtlas2) {
-        
-        attrs.sigInst.stopForceAtlas2();
-        attrs.forceAtlas2 = false;
-      }
-      
-      $(this).text("Hide Edges");
-      showEdges = true;
+      attrs.forceLables = true;
     }
     
-    attrs.sigInst.draw(2, 2, 2);
+    if (attrs.sigInst !== undefined && attrs.sigInst !== null) {
+      
+      attrs.sigInst.iterNodes(function(n){
+        
+        n.forceLabel = attrs.forceLables;
+        
+      });
+      
+      attrs.sigInst.draw();
+    }
   });
   
   // rescale button
   $("button.rescale").click(function(event) {
-    
+      
     event.preventDefault();
     
     if (attrs.sigInst === undefined || attrs.sigInst === null)
@@ -129,6 +186,7 @@ $(document).ready(function() {
     }
     
   });
+
   
   $('#l').slider().on('slide', function(ev){
     
@@ -138,6 +196,11 @@ $(document).ready(function() {
   $('#d').slider().on('slide', function(ev){
     
     attrs.d = ev.value;
+  });
+  
+  $('#i').slider().on('slide', function(ev){
+    
+    attrs.interval = ev.value * 1000;
   });
   
   $('input[type=file]').bootstrapFileInput();

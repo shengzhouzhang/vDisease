@@ -7,6 +7,7 @@
     <link href="css/main.css" rel="stylesheet" media="screen">
     <link href="libs/bootstrap/css/bootstrap.css" rel="stylesheet" media="screen">
     <link href="libs/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="libs/bootstrap/css/bootstrap-switch.css" rel="stylesheet">
     <link href="libs/slider/css/slider.css" rel="stylesheet">
   </head>
   <body>
@@ -44,11 +45,30 @@
                 <legend>Graph</legend>
                 <select class="layout">
                   <option selected="selected">ForceAtlas2</option>
+                  <option>ForceAtlas2 (LinLin Mode)</option>
+                  <option>ForceAtlas2 (Strong Gravity)</option>
+                  <!-- <option>ForceAtlas2 (LinLog Mode)</option> -->
                   <option>Circle</option>
                   <option>Random</option>
                 </select>
                 <p></p>
-                <button class="btn showEdges btn-block">Show Edges</button>
+                
+                <table style="width: 100%">
+                  <tr>
+                    <td>
+                      <div id="showEdges" class="make-switch has-switch" data-text-label="Edge">
+                        <input type="checkbox">
+                      </div>
+                    </td>
+                    <td>
+                      <div id="forceLabels" class="make-switch has-switch" data-text-label="Label">
+                        <input type="checkbox">
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+            
+                <p></P>
                 <button class="btn rescale btn-block">Rescale</button>
               </div>
               <div class="control-group">
@@ -58,6 +78,9 @@
                 
                 <label>D</label>
                 <input type="text" id="d" value="" data-slider-min="1" data-slider-max="10" data-slider-step="1" data-slider-value="5" data-slider-orientation="horizontal" data-slider-selection="before">
+                <label>Interval</label>
+           
+                <input type="text" id="i" value="" data-slider-min="1" data-slider-max="10" data-slider-step="1" data-slider-value="2" data-slider-orientation="horizontal" data-slider-selection="before">
                 <p></p>
                 <button class="btn start btn-block">Start Infection</button>
               </div>
@@ -91,6 +114,7 @@
     <script src="libs/jquery.js"></script>
     
     <script src="libs/bootstrap/js/bootstrap.min.js"></script>
+    <script src="libs/bootstrap/js/bootstrap-switch.min.js"></script>
     <script src="libs/bootstrap/js/bootstrap_file_input.js"></script>
     <script src="libs/slider/js/bootstrap-slider.js"></script>    <script src="libs/sigma.min.js"></script>
     <script src="libs/sigma.forceatlas2.js"></script>
