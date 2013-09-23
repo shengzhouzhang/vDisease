@@ -70,6 +70,7 @@ function draw(nodes, edges, options) {
     
     sigInst.startForceAtlas2({
       strongGravityMode: attrs.strongGravityMode,
+      gravity: attrs.gravity,
       linLogMode: attrs.linLogMode,
       edgeWeightInfluence: attrs.edgeWeightInfluence
     });

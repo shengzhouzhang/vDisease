@@ -10,6 +10,8 @@ function affect(sigInst, options) {
   
   var update = function() {
     
+    updateInfo({s: susceptible.length, e: exposed.length, i: infectious.length, r: recovered.length, days: timer});
+    
     sigInst.iterNodes(function(node){
       
       if ((index = susceptible.indexOf(node.id)) >= 0) {
@@ -19,7 +21,7 @@ function affect(sigInst, options) {
       
       } else if ((index = exposed.indexOf(node.id)) >= 0) {
         
-        node.color = "yellow";
+        node.color = "#FFCC00";
         node.attr.timer++;
         
         if (node.attr.timer >= node.attr.l) {
@@ -31,7 +33,7 @@ function affect(sigInst, options) {
         
       } else if ((index = infectious.indexOf(node.id)) >= 0) {
         
-        node.color = "red";
+        node.color = "#CC0000";
         node.attr.timer++;
         
         if (node.attr.timer >= node.attr.d) {
@@ -43,15 +45,13 @@ function affect(sigInst, options) {
         
       } else if ((index = recovered.indexOf(node.id)) >= 0) {
         
-        node.color = "blue";
+        node.color = "#3399CC";
         node.attr.timer = 0;
       }
       
     });
     
     sigInst.draw();
-    
-    updateInfo({s: susceptible.length, e: exposed.length, i: infectious.length, r: recovered.length, days: timer});
   };
   
   // initial attributes

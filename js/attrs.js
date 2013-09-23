@@ -10,6 +10,7 @@ var attrs = {
   counter: 0,
   forceAtlas2: false,
   strongGravityMode: false,
+  gravity: 1,
   linLogMode: true,
   edgeWeightInfluence: 1,
   interval: 2000,

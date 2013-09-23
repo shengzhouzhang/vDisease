@@ -47,10 +47,15 @@
                   <option selected="selected">ForceAtlas2</option>
                   <option>ForceAtlas2 (LinLin Mode)</option>
                   <option>ForceAtlas2 (Strong Gravity)</option>
-                  <!-- <option>ForceAtlas2 (LinLog Mode)</option> -->
                   <option>Circle</option>
                   <option>Random</option>
                 </select>
+                <p></p>
+                <label>Node Gravity</label>
+                <input type="text" id="g" value="" data-slider-min="0" data-slider-max="9" data-slider-step="1" data-slider-value="1" data-slider-orientation="horizontal" data-slider-selection="before">
+                <p></p>
+                <label>Edge Weight</label>
+                <input type="text" id="w" value="" data-slider-min="0" data-slider-max="9" data-slider-step="1" data-slider-value="1" data-slider-orientation="horizontal" data-slider-selection="before">
                 <p></p>
                 
                 <table style="width: 100%">
@@ -67,7 +72,6 @@
                     </td>
                   </tr>
                 </table>
-            
                 <p></P>
                 <button class="btn rescale btn-block">Rescale</button>
               </div>
@@ -78,7 +82,7 @@
                 
                 <label>D</label>
                 <input type="text" id="d" value="" data-slider-min="1" data-slider-max="10" data-slider-step="1" data-slider-value="5" data-slider-orientation="horizontal" data-slider-selection="before">
-                <label>Interval</label>
+                <label>Interval (s)</label>
            
                 <input type="text" id="i" value="" data-slider-min="1" data-slider-max="10" data-slider-step="1" data-slider-value="2" data-slider-orientation="horizontal" data-slider-selection="before">
                 <p></p>

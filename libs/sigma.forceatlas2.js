@@ -345,25 +345,13 @@ sigma.forceatlas2.ForceAtlas2 = function(graph) {
       this.p.scalingRatio = 10.0;
     }
     this.p.strongGravityMode = options.strongGravityMode || false;
-    this.p.gravity = 1;
+    this.p.gravity = options.gravity || 1;
 
     // Behavior
     this.p.outboundAttractionDistribution = true;
     this.p.linLogMode = options.linLogMode || false;
     this.p.adjustSizes = false;
     this.p.edgeWeightInfluence = options.edgeWeightInfluence || 1;
-    
-    //console.log(this.p.strongGravityMode);
-    
-    //var obj = this;
-    
-    /*
-    setTimeout(function(){
-      
-      obj.p.strongGravityMode = true;
-      console.log(obj.p.strongGravityMode);
-    }, 10000);
-    */
 
     // Performance
     if (graph.nodes.length >= 50000) {

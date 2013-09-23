@@ -56,6 +56,7 @@ $(document).ready(function() {
           
           attrs.sigInst.changeSettings({
             strongGravityMode: attrs.strongGravityMode,
+            gravity: attrs.gravity,
             linLogMode: attrs.linLogMode,
             edgeWeightInfluence: attrs.edgeWeightInfluence
           });
@@ -76,6 +77,7 @@ $(document).ready(function() {
           
           attrs.sigInst.changeSettings({
             strongGravityMode: attrs.strongGravityMode,
+            gravity: attrs.gravity,
             linLogMode: attrs.linLogMode,
             edgeWeightInfluence: attrs.edgeWeightInfluence
           });
@@ -187,6 +189,29 @@ $(document).ready(function() {
     
   });
 
+  $('#g').slider().on('slide', function(ev){
+    
+    attrs.gravity = ev.value;
+    
+    attrs.sigInst.changeSettings({
+      strongGravityMode: attrs.strongGravityMode,
+      gravity: attrs.gravity,
+      linLogMode: attrs.linLogMode,
+      edgeWeightInfluence: attrs.edgeWeightInfluence
+    });
+  });
+  
+  $('#w').slider().on('slide', function(ev){
+    
+    attrs.edgeWeightInfluence = ev.value;
+    
+    attrs.sigInst.changeSettings({
+      strongGravityMode: attrs.strongGravityMode,
+      gravity: attrs.gravity,
+      linLogMode: attrs.linLogMode,
+      edgeWeightInfluence: attrs.edgeWeightInfluence
+    });
+  });
   
   $('#l').slider().on('slide', function(ev){
     
