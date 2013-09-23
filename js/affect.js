@@ -24,7 +24,7 @@ function affect(sigInst, options) {
         node.color = "#FFCC00";
         node.attr.timer++;
         
-        if (node.attr.timer >= node.attr.l) {
+        if (node.attr.timer >= attrs.l) {
           
           exposed.splice(index, 1);
           infectious.push(node.id);
@@ -36,7 +36,7 @@ function affect(sigInst, options) {
         node.color = "#CC0000";
         node.attr.timer++;
         
-        if (node.attr.timer >= node.attr.d) {
+        if (node.attr.timer >= attrs.d) {
           
           infectious.splice(index, 1);
           recovered.push(node.id);
