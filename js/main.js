@@ -1,5 +1,35 @@
 $(document).ready(function() {
   
+  
+  $("button.capture").click(function(event) {
+    
+    event.preventDefault();
+    
+    console.log(document.getElementById("sigma_nodes_1"));
+    
+    var nodes = document.getElementById("sigma_nodes_1");
+    
+    //var context = nodes.getContext("2d");
+    //context.fillStyle = 'black';
+    //context.fillRect(0,   0, 350, 350);
+    //context.fill();
+    
+    var url = nodes.toDataURL('image/png');
+    
+    window.open(url);
+    
+    /*
+    html2canvas(document.getElementById("canvas"), {
+      
+      onrendered: function(canvas) {
+        
+        document.body.appendChild(canvas);
+      }
+    });
+    */
+  });
+  
+  
   //generateTestCase();
   var start = false;
   
