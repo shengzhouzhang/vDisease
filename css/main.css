@@ -1,13 +1,23 @@
 body {
   
-  padding-top: 60px;
-  padding-bottom: 20px;
+  padding-top: 70px;
+}
+
+div.container {
+ 
+  max-width: 97%;
+  width: auto;
 }
 
 #canvas {
   
-  height: 500px;
+  height: 480px;
   width: 100%;
+  /*background-color: black;*/
+}
+
+div#canvas.showbg {
+  background-color: black;
 }
 
 #panel {
@@ -37,7 +47,17 @@ table.info span {
  margin-right: 5px; 
 }
 
+div.caret {
+ 
+ margin-left: 10px; 
+}
 
+.control-content {
+ 
+ padding-top: 7px; 
+}
 
-
-
+.control-bar {
+ 
+  width: 300px; 
+}

@@ -1,99 +1,82 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Disease Outbreaks</title>
-    <link href="css/main.css" rel="stylesheet" media="screen">
-    <link href="libs/bootstrap/css/bootstrap.css" rel="stylesheet" media="screen">
-    <link href="libs/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
-    <link href="libs/bootstrap/css/bootstrap-switch.css" rel="stylesheet">
-    <link href="libs/slider/css/slider.css" rel="stylesheet">
-  </head>
-  <body>
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-    <div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container-fluid">
-          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+    <title>Disease Outbreaks</title>
+
+    <!-- Bootstrap core CSS -->
+   <link href="css/main.css" rel="stylesheet" media="screen">
+    <link href="css/bootstrap/css/bootstrap.css" rel="stylesheet" media="screen">
+    <link href="css/bootstrap/css/bootstrap-switch.css" rel="stylesheet">
+    <link href="css/bootstrap/css/bootstrap-select.css" rel="stylesheet">
+    <link href="css/slider/css/slider.css" rel="stylesheet">
+    
+    
+  </head>
+
+  <body>
+    <div class="navbar navbar-fixed-top navbar-inverse" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="brand" href="#">Project name</a>
-          <div class="nav-collapse collapse">
-            <ul class="nav">
-              <li class="active"><a href="#">Home</a></li>
-              <li><a href="#about">About</a></li>
-              <li><a href="#contact">Contact</a></li>
-            </ul>
-          </div><!--/.nav-collapse -->
+          <a class="navbar-brand" href="#">Disease Outbreaks</a>
         </div>
-      </div>
-    </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="dropdown">
+              <form class="navbar-form navbar-left" role="search">
+                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <span class="glyphicon glyphicon-file"></span>
+                    File 
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu file">
+                  <li><a href="#">Open File...</a></li>
+                  <li class="divider"></li>
+                  <li class="dropdown-header">Default Cases</li>
+                  <li><a href="" value="1">180N 350E</a></li>
+                  <li><a href="" value="2">150N 150E</a></li>
+                  <li><a href="" value="3">1000N 7500E</a></li>
+                  <li><a href="" value="4">1000N 2000E</a></li>
+                  <li><a href="" value="5">1000N 1500E</a></li>
+                </ul>
+              </form>
+            </li>
+            <li>
+              <form class="navbar-form navbar-left" role="search">
+                <a data-toggle="modal" href="#editModal" class="btn btn-default"><span class="glyphicon glyphicon-cog"></span> Edit</a>
+              </form>
+            </li>
+            <li>
+              <form class="navbar-form navbar-left" role="search">
+                <button type="submit" class="btn btn-default run"><span class="glyphicon glyphicon-play"></span> Run</button>
+                <button type="submit" class="btn btn-default stop"><span class="glyphicon glyphicon-stop"></span> Stop</button>
+              </form>
+            </li>
+            <li>
+              <form class="navbar-form navbar-left" role="search">
+                <a data-toggle="modal" href="#captureModal" class="btn btn-default download"><span class="glyphicon glyphicon-save"></span> Download</a>
+              </form>
+            </li>
+          </ul>
+        </div><!-- /.nav-collapse -->
+      </div><!-- /.container -->
+    </div><!-- /.navbar -->
 
-    <div class="container-fluid">
-      <div class="row-fluid">
-        <div class="span3">
-          <div class="well sidebar-nav">
-            <form class="form-horizontal">
-              <div class="control-group">
-                <legend>Source File</legend>
-                <input id="file" type="file" name="files[]" title="Select File" multiple />
-                <p></p>
-                <button class="btn start btn-block">Start Infection</button>
-                <button class="btn capture btn-block">Screen Capture</button>
-              </div>
-              <div class="control-group">
-                <legend>Graph</legend>
-                <select class="layout">
-                  <option selected="selected">ForceAtlas2</option>
-                  <option>ForceAtlas2 (LinLin Mode)</option>
-                  <option>ForceAtlas2 (Strong Gravity)</option>
-                  <option>Circle</option>
-                  <option>Random</option>
-                </select>
-                <p></p>
-                <label>Node Gravity</label>
-                <input type="text" id="g" value="" data-slider-min="0" data-slider-max="9" data-slider-step="1" data-slider-value="1" data-slider-orientation="horizontal" data-slider-selection="before">
-                <p></p>
-                <label>Edge Weight</label>
-                <input type="text" id="w" value="" data-slider-min="0" data-slider-max="9" data-slider-step="1" data-slider-value="1" data-slider-orientation="horizontal" data-slider-selection="before">
-                <p></p>
-                
-                <table style="width: 100%">
-                  <tr>
-                    <td>
-                      <div id="showEdges" class="make-switch has-switch" data-text-label="Edge">
-                        <input type="checkbox">
-                      </div>
-                    </td>
-                    <td>
-                      <div id="forceLabels" class="make-switch has-switch" data-text-label="Label">
-                        <input type="checkbox">
-                      </div>
-                    </td>
-                  </tr>
-                </table>
-                <p></P>
-                <button class="btn rescale btn-block">Rescale</button>
-              </div>
-              <div class="control-group">
-                <legend>Attributes</legend>
-                <label>L</label>
-                <input type="text" id="l" value="" data-slider-min="1" data-slider-max="10" data-slider-step="1" data-slider-value="3" data-slider-orientation="horizontal" data-slider-selection="before">
-                
-                <label>D</label>
-                <input type="text" id="d" value="" data-slider-min="1" data-slider-max="10" data-slider-step="1" data-slider-value="5" data-slider-orientation="horizontal" data-slider-selection="before">
-                <label>Interval (s)</label>
-           
-                <input type="text" id="i" value="" data-slider-min="1" data-slider-max="10" data-slider-step="1" data-slider-value="2" data-slider-orientation="horizontal" data-slider-selection="before">
-                
-              </div>
-            </form>
-          </div>
-        </div>
-        <div class="span9">
+    <div class="container">
+      
+      <div class="row row-offcanvas row-offcanvas-right">
+        <div class="col-md-8">
+          
           <div class="alert alert-info">
             <table class="info">
               <tr>
@@ -107,32 +90,167 @@
               </tr>
             </table>
           </div>
-          <div class="well">
+          <div class="well canvas">
             <div id="canvas">
             </div>
           </div>
-          
+        </div><!--/span-->
+        <div class="col-md-4">
+          <div class="well">
+            <div class="btn-group layout">
+              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                ForceAtlas2 <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="#" value="ForceAtlas2" >ForceAtlas2</a></li>
+                <li><a href="#" value="ForceAtlas2 (LinLin Mode)">ForceAtlas2 (LinLin Mode)</a></li>
+                <li><a href="#" value="ForceAtlas2 (Strong Gravity)">ForceAtlas2 (Strong Gravity)</a></li>
+                <li class="divider"></li>
+                <li><a href="#" value="Circle">Circle</a></li>
+                <li><a href="#" value="Spiral">Spiral</a></li>
+                <li><a href="#" value="Degree">Degree</a></li>
+              </ul>
+            </div>
+            <p></p>
+            <table style="width: 100%;">
+              <tr>
+                <td>
+                  <div id="showEdges" class="make-switch has-switch" data-text-label="Edge">
+                    <input type="checkbox">
+                  </div>
+                </td>
+                <td>
+                  <div id="forceLabels" class="make-switch has-switch" data-text-label="Label">
+                    <input type="checkbox">
+                  </div>
+                </td>
+              </tr>
+            </table>
+            <!-- <p></p>
+            <button class="btn btn-default btn-block capture">Screen Capture</button> -->
+            </div>
+          </div>
         </div>
-      </div>
+      </div><!--/.container-->
 
-    </div><!--/.fluid-container-->
+      <!-- Modal -->
+      <div class="modal fade" id="editModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title">Edit Attributes</h4>
+            </div>
+            <div class="modal-body">
+              <form class="form-horizontal" role="form">
+                <!-- <div class="form-group">
+                  <label class="col-lg-3 control-label">Susceptible</label>
+                  <div class="col-lg-7">
+                    <input type="email" class="form-control control-bar" id="susceptibleInput" placeholder="Enter the id of nodes: 1, 2, 3">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-lg-3 control-label">Exposed</label>
+                  <div class="col-lg-7">
+                    <input type="email" class="form-control control-bar" id="exposedInput" placeholder="Enter the id of nodes: 1, 2, 3">
+                  </div>
+                </div> -->
+                <div class="form-group">
+                  <label class="col-lg-3 control-label">Infectious</label>
+                  <div class="col-lg-7">
+                    <input type="email" class="form-control control-bar" id="infectiousInput" placeholder="Enter the id of nodes: 1, 2, 3">
+                  </div>
+                </div>
+                <!-- <div class="form-group">
+                  <label class="col-lg-3 control-label">Recovered</label>
+                  <div class="col-lg-7">
+                    <input type="email" class="form-control control-bar" id="recoveredInput" placeholder="Enter the id of nodes: 1, 2, 3">
+                  </div>
+                </div> -->
+                <!-- <div class="form-group">
+                  <label class="col-lg-3 control-label">Node Gravity</label>
+                  <div class="col-lg-9 control-content">
+                    <input type="text" class="control-bar" id="g" value="" data-slider-min="0" data-slider-max="9" data-slider-step="1" data-slider-value="1" data-slider-orientation="horizontal" data-slider-selection="before">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-lg-3 control-label">Edge Weight</label>
+                  <div class="col-lg-9 control-content">
+                    <input type="text" class="control-bar" id="w" value="" data-slider-min="0" data-slider-max="9" data-slider-step="1" data-slider-value="1" data-slider-orientation="horizontal" data-slider-selection="before">
+                  </div>
+                </div> -->
+                <div class="form-group">
+                  <label class="col-lg-3 control-label">Exposed Period</label>
+                  <div class="col-lg-9 control-content">
+                    <input type="text" class="control-bar" id="l" value="" data-slider-min="1" data-slider-max="10" data-slider-step="1" data-slider-value="3" data-slider-orientation="horizontal" data-slider-selection="before">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-lg-3 control-label">Infectious Period</label>
+                  <div class="col-lg-9 control-content">
+                    <input type="text" class="control-bar" id="d" value="" data-slider-min="1" data-slider-max="10" data-slider-step="1" data-slider-value="5" data-slider-orientation="horizontal" data-slider-selection="before">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-lg-3 control-label">Visual Speed</label>
+                  <div class="col-lg-9 control-content">
+                    <input type="text" class="control-bar" id="i" value="" data-slider-min="1" data-slider-max="10" data-slider-step="1" data-slider-value="2" data-slider-orientation="horizontal" data-slider-selection="before">
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div><!-- /.modal -->
     
-    <script src="libs/jquery.js"></script>
-    <script src="libs/html2canvas.js"></script>
-    <!-- <script src="libs/feedback.js"></script> -->
+    
+    <div class="modal fade" id="captureModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title">Screen Captures</h4>
+            </div>
+            <div class="modal-body">
+              <ul class="logs">
+                <li><a id="logs" href="" target="_blank">Infection_Logs</a></li>
+              </ul>
+              <ul class="images">
+              </ul>
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div><!-- /.modal -->
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <!-- <script src="scripts/libs/jquery/jquery-2.0.3.min.js"></script>
+    <script src="scripts/libs/bootstrap/js/bootstrap.min.js"></script>
+    <script src="scripts/libs/bootstrap/js/bootstrap-switch.min.js"></script>
+    <script src="scripts/libs/bootstrap/js/bootstrap_file_input.js"></script> -->
+    <!-- <script src="scripts/libs/slider/js/bootstrap-slider.js"></script> -->
+    <script src="scripts/libs/sigma.min.js"></script>
+    <script src="scripts/libs/sigma.forceatlas2.js"></script>
+    
+    <!--<script src="libs/html2canvas.js"></script>
     <script src="libs/bootstrap/js/bootstrap.min.js"></script>
     <script src="libs/bootstrap/js/bootstrap-switch.min.js"></script>
     <script src="libs/bootstrap/js/bootstrap_file_input.js"></script>
     <script src="libs/slider/js/bootstrap-slider.js"></script>    <script src="libs/sigma.min.js"></script>
     <script src="libs/sigma.forceatlas2.js"></script>
     <script src="js/attrs.js"></script>
-    <script src="js/test.js"></script>
-    <script src="js/affect.js"></script>
-    <script src="js/draw.js"></script>
+    <script src="js/log.js"></script>
+    <script src="js/seir.js"></script>
+    <script src="js/graph/graph.js"></script>
     <script src="js/file.js"></script>
-    <script src="js/main.js"></script>
-
-  
-
+    <script src="js/test.js"></script>
+    <script src="js/interface.js"></script> -->
+    
+    <script data-main="scripts/config.js" src="scripts/libs/require.js"></script>
   </body>
 </html>
