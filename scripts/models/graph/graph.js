@@ -37,10 +37,10 @@ function(jquery, degree, circle) {
         
         this.sigInst.addNode(node.id, {
           label: node.id,
-          //x: this.positionX(count++, length, radius),
-          //y: this.positionY(count++, length, radius),
-          x: node.x,
-          y: nodex.y,
+          x: this.positionX(count++, length, radius),
+          y: this.positionY(count++, length, radius),
+          //x: node.x,
+          //y: node.y,
           size: node.size,
           color: node.color,
           forceLabel: node.forceLabel,
