@@ -15,6 +15,7 @@
     <link href="css/bootstrap/css/bootstrap-switch.css" rel="stylesheet">
     <link href="css/bootstrap/css/bootstrap-select.css" rel="stylesheet">
     <link href="css/slider/css/slider.css" rel="stylesheet">
+    <link href="css/nouislider/jquery.nouislider.min.css" rel="stylesheet">
     
     
   </head>
@@ -40,7 +41,12 @@
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu file">
-                  <li><a href="#">Open File...</a></li>
+                  <li>
+                    <input id="fileInput" type="file" style="visibility:hidden" />
+                    <a href="#" id="showDialog">
+                      Open File...
+                    </a>
+                  </li>
                   <li class="divider"></li>
                   <li class="dropdown-header">Default Cases</li>
                   <li><a href="" value="1">180N 350E</a></li>
@@ -64,7 +70,12 @@
             </li>
             <li>
               <form class="navbar-form navbar-left" role="search">
-                <a data-toggle="modal" href="#captureModal" class="btn btn-default download"><span class="glyphicon glyphicon-save"></span> Download</a>
+                <a id="video" data-toggle="modal" href="#captureModal" class="btn btn-default"><span class="glyphicon glyphicon-film"></span> Replay</a>
+              </form>
+            </li>
+            <li>
+              <form class="navbar-form navbar-left" role="search">
+                <a id="download" class="btn btn-default"><span class="glyphicon glyphicon-download-alt"></span> Download</a>
               </form>
             </li>
           </ul>
@@ -98,7 +109,7 @@
         <div class="col-md-4">
           <div class="well">
             <div class="btn-group layout">
-              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+              <button id="layoutButton" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                 ForceAtlas2 <span class="caret"></span>
               </button>
               <ul class="dropdown-menu" role="menu">
@@ -108,11 +119,10 @@
                 <li class="divider"></li>
                 <li><a href="#" value="Circle">Circle</a></li>
                 <li><a href="#" value="Spiral">Spiral</a></li>
-                <li><a href="#" value="Degree">Degree</a></li>
               </ul>
             </div>
             <p></p>
-            <table style="width: 100%;">
+            <table class="frontPanel">
               <tr>
                 <td>
                   <div id="showEdges" class="make-switch has-switch" data-text-label="Edge">
@@ -125,9 +135,21 @@
                   </div>
                 </td>
               </tr>
+              <tr>
+                <td>
+                  <div class="make-switch radioDegree" data-text-label="Deg">
+                    <input id="degree" type="radio" name="radioDegree" value="degree" checked="checked">
+                  </div>
+                </td>
+                <td>
+                  <div class="make-switch radioDegree" data-text-label="vDeg">
+                    <input id="vdegree" type="radio" name="radioDegree" value="vdegree">
+                  </div>
+                </td>
+              </tr>
             </table>
-            <!-- <p></p>
-            <button class="btn btn-default btn-block capture">Screen Capture</button> -->
+            <p></p>
+            <canvas id="graph"></canvas>
             </div>
           </div>
         </div>
@@ -143,65 +165,44 @@
             </div>
             <div class="modal-body">
               <form class="form-horizontal" role="form">
-                <!-- <div class="form-group">
-                  <label class="col-lg-3 control-label">Susceptible</label>
-                  <div class="col-lg-7">
-                    <input type="email" class="form-control control-bar" id="susceptibleInput" placeholder="Enter the id of nodes: 1, 2, 3">
-                  </div>
-                </div>
                 <div class="form-group">
-                  <label class="col-lg-3 control-label">Exposed</label>
-                  <div class="col-lg-7">
-                    <input type="email" class="form-control control-bar" id="exposedInput" placeholder="Enter the id of nodes: 1, 2, 3">
-                  </div>
-                </div> -->
-                <div class="form-group">
-                  <label class="col-lg-3 control-label">Infectious</label>
+                  <label class="col-lg-3 control-label">Initial Infectious Nodes</label>
                   <div class="col-lg-7">
                     <input type="email" class="form-control control-bar" id="infectiousInput" placeholder="Enter the id of nodes: 1, 2, 3">
                   </div>
                 </div>
-                <!-- <div class="form-group">
-                  <label class="col-lg-3 control-label">Recovered</label>
-                  <div class="col-lg-7">
-                    <input type="email" class="form-control control-bar" id="recoveredInput" placeholder="Enter the id of nodes: 1, 2, 3">
-                  </div>
-                </div> -->
-                <!-- <div class="form-group">
-                  <label class="col-lg-3 control-label">Node Gravity</label>
-                  <div class="col-lg-9 control-content">
-                    <input type="text" class="control-bar" id="g" value="" data-slider-min="0" data-slider-max="9" data-slider-step="1" data-slider-value="1" data-slider-orientation="horizontal" data-slider-selection="before">
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="col-lg-3 control-label">Edge Weight</label>
-                  <div class="col-lg-9 control-content">
-                    <input type="text" class="control-bar" id="w" value="" data-slider-min="0" data-slider-max="9" data-slider-step="1" data-slider-value="1" data-slider-orientation="horizontal" data-slider-selection="before">
-                  </div>
-                </div> -->
                 <div class="form-group">
                   <label class="col-lg-3 control-label">Exposed Period</label>
                   <div class="col-lg-9 control-content">
-                    <input type="text" class="control-bar" id="l" value="" data-slider-min="1" data-slider-max="10" data-slider-step="1" data-slider-value="3" data-slider-orientation="horizontal" data-slider-selection="before">
+                    <div id="exposed_period" class="slider"></div>
+                    <input type="text" id="exposed_period_input" class="slider-input">
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="col-lg-3 control-label">Infectious Period</label>
                   <div class="col-lg-9 control-content">
-                    <input type="text" class="control-bar" id="d" value="" data-slider-min="1" data-slider-max="10" data-slider-step="1" data-slider-value="5" data-slider-orientation="horizontal" data-slider-selection="before">
+                    <div id="infectious_period" class="slider"></div>
+                    <input type="text" id="infectious_period_input" class="slider-input">
                   </div>
                 </div>
                 <div class="form-group">
-                  <label class="col-lg-3 control-label">Visual Speed</label>
+                  <label class="col-lg-3 control-label">Visualize Speed</label>
                   <div class="col-lg-9 control-content">
-                    <input type="text" class="control-bar" id="i" value="" data-slider-min="1" data-slider-max="10" data-slider-step="1" data-slider-value="2" data-slider-orientation="horizontal" data-slider-selection="before">
+                    <div id="visualize_speed" class="slider"></div>
+                    <input type="text" id="visualize_speed_input" class="slider-input">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-lg-3 control-label">Affect Probability</label>
+                  <div class="col-lg-9 control-content">
+                    <div id="affect_probability" class="slider"></div>
+                    <input type="text" id="affect_probability_input" class="slider-input">
                   </div>
                 </div>
               </form>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
             </div>
           </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
@@ -209,18 +210,19 @@
     
     
     <div class="modal fade" id="captureModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog replay">
           <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
               <h4 class="modal-title">Screen Captures</h4>
             </div>
             <div class="modal-body">
-              <ul class="logs">
-                <li><a id="logs" href="" target="_blank">Infection_Logs</a></li>
-              </ul>
-              <ul class="images">
-              </ul>
+              <img id="replay" />
+              <div class="col-lg-12 control-content">
+                <div id="replay_slider" class="slider"></div>
+                <input type="text" id="replay_slider_input" class="slider-input">
+              </div>
+              <!-- <canvas id="replay"></canvas> -->
             </div>
           </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
@@ -228,28 +230,8 @@
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <!-- <script src="scripts/libs/jquery/jquery-2.0.3.min.js"></script>
-    <script src="scripts/libs/bootstrap/js/bootstrap.min.js"></script>
-    <script src="scripts/libs/bootstrap/js/bootstrap-switch.min.js"></script>
-    <script src="scripts/libs/bootstrap/js/bootstrap_file_input.js"></script> -->
-    <!-- <script src="scripts/libs/slider/js/bootstrap-slider.js"></script> -->
     <script src="scripts/libs/sigma.min.js"></script>
     <script src="scripts/libs/sigma.forceatlas2.js"></script>
-    
-    <!--<script src="libs/html2canvas.js"></script>
-    <script src="libs/bootstrap/js/bootstrap.min.js"></script>
-    <script src="libs/bootstrap/js/bootstrap-switch.min.js"></script>
-    <script src="libs/bootstrap/js/bootstrap_file_input.js"></script>
-    <script src="libs/slider/js/bootstrap-slider.js"></script>    <script src="libs/sigma.min.js"></script>
-    <script src="libs/sigma.forceatlas2.js"></script>
-    <script src="js/attrs.js"></script>
-    <script src="js/log.js"></script>
-    <script src="js/seir.js"></script>
-    <script src="js/graph/graph.js"></script>
-    <script src="js/file.js"></script>
-    <script src="js/test.js"></script>
-    <script src="js/interface.js"></script> -->
     
     <script data-main="scripts/config.js" src="scripts/libs/require.js"></script>
   </body>

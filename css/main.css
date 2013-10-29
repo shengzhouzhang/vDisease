@@ -61,3 +61,47 @@ div.caret {
  
   width: 300px; 
 }
+
+div.replay {
+  
+ width: 800px; 
+}
+#replay {
+ 
+ width: 100%;
+ height: 400px; 
+}
+
+.slider {
+ 
+  width: 60%;
+}
+
+.slider-input {
+  
+  height: 40px;
+  width: 40px;
+  text-align: center;
+  margin-left: 30px;
+}
+
+#replay_slider {
+
+  width: 400px;
+}
+
+#graph {
+  
+  width: 100%;
+  height: 300px;
+}
+
+table.frontPanel {
+ 
+ width: 100%; 
+}
+
+table.frontPanel td{
+ 
+  padding-bottom: 10px;
+}

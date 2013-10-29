@@ -13,12 +13,12 @@ function($) {
     
     var circle = this;
     
-    var count = 0, radius = 200;
+    var count = 0, radius = 200, length = nodes.length;
     
     nodes.forEach(function(node) {
       
-      node.x = circle.positionX(count++, nodes.length, radius);
-      node.y = circle.positionY(count++, nodes.length, radius);
+      node.x = circle.positionX(count++, length, radius);
+      node.y = circle.positionY(count++, length, radius);
     });
   };
   

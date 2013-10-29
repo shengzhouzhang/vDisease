@@ -13,6 +13,12 @@ define([
       if (nodes.length === 0)
         console.log("error!");
       
+      nodes.forEach(function(node) {
+
+        node.degree = 0;
+        node.vdegree = 0;
+      });
+      
       // calculate degree for each node
       nodes.forEach(function(node) {
         
@@ -73,14 +79,18 @@ define([
             vmax < node.vdegree)
           vmax = node.vdegree;
         
-        //console.log(JSON.stringify(node));
-        
-        node.size = options.type == "degree" ? 
-          node[options.type] < options.min ? 
+        /*
+        node.size = node[options.type] < options.min ? 
           options.min : node[options.type] > options.max ? 
-            options.max : node[options.type] : 
-              options.max * (node[options.type] / this.vmax);
+            options.max : node[options.type];
+        */
         
+        /*
+        if (options.type == "degree")
+          node.size = options.min + (options.max - options.min) * (node["degree"] - min) / (max - min);
+        else
+          node.size = options.min + (options.max - options.min) * (node["vdegree"] - vmin) / (vmax - vmin);
+        */
       });
       
       this.min = min;
@@ -95,9 +105,7 @@ define([
       this.vavg = (vmax + vmin) / 2;
       this.vdef = vmax - vmin;
       
-      console.log(this.min);
-      console.log(this.max);
-      
+      /*
       edges.forEach(function(edge) {
         
         var result = $.grep(nodes, function(node) {
@@ -112,6 +120,7 @@ define([
           degree.max * (result[0][options.type] / degree.max) : 
           degree.max * (result[0][options.type] / degree.vmax);
       });
+      */
     },
   };
   

@@ -4,7 +4,7 @@ define([
   "jquery",
   
   // models
-  "models/degree",
+  "models/graph/size",
   //"models/graph/layout/degree",
   "models/graph/layout/circle"
 ],
@@ -15,21 +15,23 @@ function(jquery, degree, circle) {
     
     initial: function(nodes, edges, options) {
       
-      var i, node, edge, count = 0, length = nodes.length, radius = 200, min = 2, max = 10, type = "degree";
+      var i, node, edge, count = 0, length = nodes.length, radius = 200;
       
       this.sigInst = sigma.init(document.getElementById('canvas')).drawingProperties({
         defaultLabelColor: '#000',
         defaultLabelSize: 12,
         defaultLabelBGColor: '#fff',
         defaultLabelHoverColor: '#000',
-        labelThreshold: max,
+        labelThreshold: attrs.max,
       }).mouseProperties({
         minRatio: .5,
         maxRatio: 30
       });
       
       // calculate degree
-      degree.apply(nodes, edges, {type: "degree", min: min, max: max});
+      size.applyDegree(nodes, edges);
+      
+      circle.initial(nodes);
       
       for (i = 0; i < nodes.length; i++) {
         
@@ -37,14 +39,14 @@ function(jquery, degree, circle) {
         
         this.sigInst.addNode(node.id, {
           label: node.id,
-          x: this.positionX(count++, length, radius),
-          y: this.positionY(count++, length, radius),
-          //x: node.x,
-          //y: node.y,
+          //x: this.positionX(count++, length, radius),
+          //y: this.positionY(count++, length, radius),
+          x: node.x,
+          y: node.y,
           size: node.size,
           color: node.color,
           forceLabel: node.forceLabel,
-          degree: node[type],
+          degree: node["degree"],
           l: attrs.l, 
           d: attrs.d, 
           timer: 0
@@ -63,12 +65,14 @@ function(jquery, degree, circle) {
         });
       }
      
-      this.initialForceAtlas2(nodes);
+      //this.initialForceAtlas2(nodes);
       
       this.startForceAtlas2();
     },
     
-    updateNodes: function(nodes) {
+    updateNodes: function(nodes, attrs) {
+      
+      var i, item;
       
       this.sigInst.iterNodes(function(node) {
         
@@ -79,7 +83,9 @@ function(jquery, degree, circle) {
         
         if (result.length !== 0) {
           
-          for (var item in result[0]) {
+          for (i = 0; i < attrs.length; i++) {
+            
+            item = attrs[i];
             
             node[item] = result[0][item];
           } 
@@ -108,6 +114,7 @@ function(jquery, degree, circle) {
     
     draw: function() {
       
+      //this.hasStartedForceAtlas2 = undefined;
       this.sigInst.draw();
     },
     
@@ -122,12 +129,19 @@ function(jquery, degree, circle) {
         this.stopForceAtlas2();
     },
     
-    hideEdges: function() {
-      
+    hideEdges: function() {  
+        
       this.sigInst.iterEdges(function(edge) {
         
         edge.hidden = true;
       });
+      
+      if ([
+        "ForceAtlas2", 
+        "ForceAtlas2 (LinLin Mode)", 
+        "ForceAtlas2 (Strong Gravity)"
+      ].indexOf(attrs.layout) != -1)
+        this.startForceAtlas2();
     },
     
     showLabels: function() {
@@ -146,11 +160,6 @@ function(jquery, degree, circle) {
       });
     },
     
-    initialForceAtlas2: function(nodes) {
-      
-      this.hasStartedForceAtlas2 = false;
-    },
-    
     startForceAtlas2: function() {
       
       if (!this.hasStartedForceAtlas2) {
@@ -165,22 +174,22 @@ function(jquery, degree, circle) {
         this.hasStartedForceAtlas2 = true;
         
       } else {
-        
+
         this.sigInst.changeSettings({
           strongGravityMode: attrs.strongGravityMode,
           gravity: attrs.gravity,
           linLogMode: attrs.linLogMode,
           edgeWeightInfluence: attrs.edgeWeightInfluence
         });
-        
-        this.hasStartedForceAtlas2 = false;
       }
     },
     
     stopForceAtlas2: function() {
       
-      this.sigInst.stopForceAtlas2();
-      this.hasStartedForceAtlas2 = false;
+      if (this.hasStartedForceAtlas2) {
+        this.sigInst.stopForceAtlas2();
+        this.hasStartedForceAtlas2 = false;
+      }
     },
     
     showNeighbor: function(sigInst) {
@@ -235,16 +244,6 @@ function(jquery, degree, circle) {
           
         }).draw(2, 2, 2);
       });
-    },
-    
-    positionX: function(count, length, radius) {
-      
-      return Math.cos(Math.PI * count / length) * radius;
-    },
-    
-    positionY: function(count, length, radius) {
-      
-      return Math.sin(Math.PI * count / length) * radius;
     },
   };
   

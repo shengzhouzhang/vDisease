@@ -4,17 +4,27 @@ define([
   "jquery",
   
   // models
+  "models/attrs",
   "models/log",
+  "models/video",
   "models/graph/graph"
 ],
 
-function($, log, graph) {
+function($, attrs, log, video, graph) {
   
   var SEIR = {};
   
   SEIR.start = function() {
     
     this.interval();
+  };
+  
+  SEIR.colors = {
+    initial: attrs.color,
+    susceptible: "#A0A0A0",
+    exposed: "#FFCC00",
+    infectious: "#CC0000",
+    recovered: "#A0A0A0"
   };
   
   SEIR.initial = function (graph, options) {
@@ -28,8 +38,6 @@ function($, log, graph) {
     this.timer = 0;
     this.nodes = options.nodes;
     this.edges = options.edges;
-    
-    console.log(this.nodes[0]);
     
     this.inits = options.inits;
     
@@ -62,12 +70,14 @@ function($, log, graph) {
       });
     }
     
+    // if no infectious nodes given, choose a random node
     if (seir.infectious.length == 0) {
       
-      console.log("no initial infectious nodes.");
-      return;
+      var node = Math.round(Math.random() * this.nodes.length);
+      seir.infectious.push(node.toString());
     }
     
+    // push every nodes that is not an infectious into susceptible nodes
     this.nodes.forEach(function(node) {
       
       node.timer = 0;
@@ -78,6 +88,13 @@ function($, log, graph) {
         
         seir.susceptible.push(node.id);
       }
+    });
+    
+    // set edges visable and give a light color
+    seir.edges.forEach(function(edge) {
+      
+      edge.color = seir.colors.susceptible;
+      edge.hidden = false;
     });
   };
   
@@ -93,26 +110,32 @@ function($, log, graph) {
         
         seir.edges.forEach(function(edge) {
           
+          // get infection
           if(seir.infectious.indexOf(edge.source) >= 0 && 
              (index = seir.susceptible.indexOf(edge.target)) >= 0 &&
-             Math.random() < edge.probability) {
+             Math.random() < (attrs.probability == 0.0 ? edge.probability : attrs.probability)) {
             
             log.write(seir.timer + "\t" + edge.source + "\t" + edge.target);
             
+            // remove from susceptible nodes
             seir.susceptible.splice(index, 1);
-            seir.exposed.push(edge.target);
-            edge.hidden = false;
             
+            // push to exposed nodes, edge.target is only the id of the node
+            seir.exposed.push(edge.target);
+            
+            // change edge color
+            edge.color = seir.colors.infectious;
           };
         });
         
+        // day +1
         seir.timer++;
         
         // infection
         seir.update();
       }
       
-    }, attrs.interval);
+    }, attrs.interval * 1000);
   };
   
   SEIR.update = function() {
@@ -125,16 +148,17 @@ function($, log, graph) {
       
       if ((index = seir.susceptible.indexOf(node.id)) >= 0) {
         
-        node.color = "green";
+        //node.color = seir.colors.susceptible;
         node.timer = 0;
         
       } else if ((index = seir.exposed.indexOf(node.id)) >= 0) {
         
-        node.color = "#FFCC00";
+        node.color = seir.colors.exposed;
         node.timer++;
         
-        if (node.timer >= attrs.l) {
+        if (node.timer >= attrs.exposed_period) {
           
+          // remove from exposed nodes, and push into infectious nodes
           seir.exposed.splice(index, 1);
           seir.infectious.push(node.id);
           node.timer = 0;
@@ -142,11 +166,12 @@ function($, log, graph) {
         
       } else if ((index = seir.infectious.indexOf(node.id)) >= 0) {
         
-        node.color = "#CC0000";
+        node.color = seir.colors.infectious;
         node.timer++;
         
-        if (node.timer >= attrs.d) {
+        if (node.timer >= attrs.infectious_period) {
           
+          // remove from infectious nodes, and push into recovered nodes
           seir.infectious.splice(index, 1);
           seir.recovered.push(node.id);
           
@@ -155,22 +180,22 @@ function($, log, graph) {
         
       } else if ((index = seir.recovered.indexOf(node.id)) >= 0) {
         
-        node.color = "#3399CC";
+        node.color = seir.colors.recovered;
         node.timer = 0;
         
+        // change edge's color if the node is recovered
         seir.edges.forEach(function(edge) {
           
           if (edge.source === node.id) {
-            edge.hidden = true;
+            edge.color = seir.colors.recovered;
           }
         });
       }
     });
     
-    console.log(seir.nodes[0]);
-    this.graph.updateNodes(seir.nodes);
+    // update graph
+    this.graph.updateNodes(seir.nodes, ["color"]);
     this.graph.updateEdges(seir.edges);
-    
     this.graph.draw();
   };
   
@@ -197,17 +222,7 @@ function($, log, graph) {
     if (options.r !== undefined)
       $("#recovered").html(options.r);
     
-    if (attrs.screencapture && options.days >= 1) {
-      
-      var nodes = document.getElementById("sigma_nodes_1");
-      var url = nodes.toDataURL('image/png');
-      
-      $("ul.images").append('<li><a href="' + url + '" target="_blank">image_day_' + options.days + '</a></li>');
-      
-      var stream = log.download();
-      
-      $("#logs").attr("href", "data:application/octet-stream," + encodeURIComponent(stream));
-    }
+    video.capture(options);
   };
 
   

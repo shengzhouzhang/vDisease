@@ -1,10 +1,12 @@
 define([
   
   // Libraries
-  "jquery"
+  "jquery",
+  
+  "models/attrs"
 ],
 
-function($) {
+function($, attrs) {
   
   var File = {};
   
@@ -36,7 +38,7 @@ function($) {
           x: 0,
           y: 0,
           size: 2,
-          color: "green",
+          color: attrs.color,
           forceLables: false,
         });
       }
@@ -50,7 +52,7 @@ function($) {
           x: 0,
           y: 0,
           size: 2,
-          color: "green",
+          color: attrs.color,
           forceLabel: false,
         });
       }

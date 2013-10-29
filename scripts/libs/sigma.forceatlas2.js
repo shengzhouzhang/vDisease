@@ -933,8 +933,6 @@ sigma.forceatlas2.Region.prototype.applyForce = function(n, Force, theta) {
 
 sigma.publicPrototype.startForceAtlas2 = function(options) {
   
-  console.log(options);
-  
   //if(!this.forceatlas2) {
     this.forceatlas2 = new sigma.forceatlas2.ForceAtlas2(this._core.graph);
     this.forceatlas2.setAutoSettings(options || {});

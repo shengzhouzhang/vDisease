@@ -6,17 +6,18 @@ require([
   "switcher",
   
   "models/log",
+  "models/video",
   "models/attrs",
   "models/file",
   "models/seir",
   "models/graph/graph",
-  "models/graph/layout/degree",
+  "models/graph/size",
   "models/graph/layout/spiral",
   "models/graph/layout/circle"
   
 ],
 
-function($, bootstrap, slider, switcher, log, attrs, file, seir, graph, degree, spiral, circle) {
+function($, bootstrap, slider, switcher, log, video, attrs, file, seir, graph, size, spiral, circle) {
 
 
   $(document).ready(function() {
@@ -28,11 +29,44 @@ function($, bootstrap, slider, switcher, log, attrs, file, seir, graph, degree, 
     var nodes, edges;
     
     // load file
+    
+    $("#fileInput").change(function(event) {
+      
+      var fileData = event.target.files[0]; // FileList object
+      
+      var reader = new FileReader();
+      
+      reader.onloadend = function(event) {
+
+        //console.log(event.target);
+        var data = event.target.result;
+        var result = file.parseFile(data);
+        
+        nodes = result.nodes;
+        edges = result.edges;
+        
+        graph.initial(nodes, edges, {});
+        
+        hasLoaded = true;
+        
+        $("form.navbar-form").removeClass("open");
+      };
+      
+      // Read in the image file as a data URL.
+      reader.readAsText(fileData);
+    });
+    
     $("form.navbar-form ul.file a").click(function(event) {
       
       event.preventDefault();
       
       var val = $(this).attr("value");
+      
+      if (!val) {
+        
+        $('#fileInput').click();
+        return;
+      }
       var fileName;
       
       fileName = val + ".txt";
@@ -74,21 +108,16 @@ function($, bootstrap, slider, switcher, log, attrs, file, seir, graph, degree, 
       
       if (hasLoaded) {
         
-        var susceptible = [];
-        var exposed = [];
-        var recovered = [];
-        var infectious = file.parseIDs($("#infectiousInput").val());
-        
         if (!attrs.isRun && !isStarted) {
           
           graph.stopForceAtlas2();
           
           seir.initial(graph, {
             inits: {
-              susceptible: susceptible,
-              exposed: exposed,
-              infectious: infectious,
-              recovered: recovered
+              susceptible: [],
+              exposed: [],
+              infectious: file.parseIDs($("#infectiousInput").val()),
+              recovered: []
             }, 
             nodes: nodes, 
             edges: edges, 
@@ -119,83 +148,60 @@ function($, bootstrap, slider, switcher, log, attrs, file, seir, graph, degree, 
       
       if (hasLoaded) {
         
-        if (graph.hasStartedForceAtlas2) {
-          
-          //graph.stopForceAtlas2();
-        }
-        
-        console.log(attrs.layout);
+        $(layoutButton).html(attrs.layout + ' <span class="caret"></span>');
         
         switch (attrs.layout) {
             
+          case "Spiral":
+            graph.stopForceAtlas2();
+            spiral.initial(nodes, edges);
+            graph.updateNodes(nodes, ["x", "y"]);
+            graph.draw();
+            break;
+          case "Circle":
+            graph.stopForceAtlas2();
+            circle.initial(nodes);
+            graph.updateNodes(nodes, ["x", "y"]);
+            graph.draw();
+            break;
           case "ForceAtlas2 (LinLin Mode)":
             attrs.strongGravityMode = false;
             attrs.linLogMode = false;
             attrs.edgeWeightInfluence = 1;
-            circle.initial(nodes);
-            graph.updateNodes(nodes);
-            graph.initialForceAtlas2(nodes);
+            graph.startForceAtlas2();
             break;
           case "ForceAtlas2 (Strong Gravity)":
             attrs.strongGravityMode = true;
             attrs.linLogMode = true;
             attrs.edgeWeightInfluence = 1;
-            circle.initial(nodes);
-            graph.updateNodes(nodes);
-            graph.initialForceAtlas2(nodes);
-            break;
-          case "Degree":
-            degree.initial(nodes, edges);
-            graph.updateNodes(nodes);
-            break;
-          case "Spiral":
-            spiral.initial(nodes, edges);
-            graph.updateNodes(nodes);
-            break;
-          case "Circle":
-            circle.initial(nodes);
-            graph.updateNodes(nodes);
+            graph.startForceAtlas2();
             break;
           default:
             attrs.strongGravityMode = false;
             attrs.linLogMode = true;
             attrs.edgeWeightInfluence = 1;
             circle.initial(nodes);
-            graph.updateNodes(nodes);
-            graph.initialForceAtlas2(nodes);
+            graph.updateNodes(nodes, ["x", "y"]);
+            graph.startForceAtlas2();
             break;
          }
-        
-        //graph.updateNodes(nodes);
-        
-        if (attrs.layout.toLowerCase().indexOf("forceatlas2") !== -1) {
-          
-          graph.startForceAtlas2();
-          
-        } else {
-          
-          graph.draw();
-        }
-
       }
     });
     
-    /*
     // stop button
     $("button.stop").click(function(event) {
       
       event.preventDefault();
       
-      $("div.canvas").html('<div id="canvas"></div>');
-      
-      if (attrs.interval)
-        clearTimeout(attrs.interval);
-      
-      hasLoaded = false;
-      
-      delete attrs.interval;
+      location.reload();
     });
-    */
+    
+    $("#download").click(function(event) {
+    
+      event.preventDefault();
+      
+      window.open("data:application/octet-stream," + encodeURIComponent(log.download()));
+    });
     
     // radio button
     switcher("#showEdges input").change(function(event){
@@ -204,24 +210,17 @@ function($, bootstrap, slider, switcher, log, attrs, file, seir, graph, degree, 
       
       event.preventDefault();
         
-        if (attrs.showEdges) {
-          
-          attrs.showEdges = false;
-        } else {
-          
-          attrs.showEdges = true;
-        }
+      if (attrs.showEdges) 
+        attrs.showEdges = false;
+      else  
+        attrs.showEdges = true;
       
       if (hasLoaded) {
         
-        if (attrs.showEdges) {
-          
+        if (attrs.showEdges)
           graph.showEdges();
-          
-        } else {
-          
+        else  
           graph.hideEdges(); 
-        }
         
         graph.draw();
       }
@@ -234,11 +233,9 @@ function($, bootstrap, slider, switcher, log, attrs, file, seir, graph, degree, 
       if (attrs.forceLables) {
         
         attrs.forceLables = false;
-        //$("div#canvas").removeClass("showbg");
       } else {
         
         attrs.forceLables = true;
-        //$("div#canvas").addClass("showbg");
       }
       
       if (hasLoaded) {
@@ -252,49 +249,117 @@ function($, bootstrap, slider, switcher, log, attrs, file, seir, graph, degree, 
       }
     });
     
-    /*
-    $('#g').slider().on('slide', function(ev){
+    switcher('.radioDegree').on('switch-change', function (e, data) {
       
-      attrs.gravity = ev.value;
+      $('.radioDegree').bootstrapSwitch('toggleRadioStateAllowUncheck', true);
       
-      attrs.sigInst.changeSettings({
-        strongGravityMode: attrs.strongGravityMode,
-        gravity: attrs.gravity,
-        linLogMode: attrs.linLogMode,
-        edgeWeightInfluence: attrs.edgeWeightInfluence
-      });
+      var id = $(data.el).attr("id");
+      var value = data.value;
+      var i;
+      
+      if (id == "degree" && value) {
+        
+        size.applyDegree(nodes, edges);
+        
+        graph.updateNodes(nodes, ["size"]);
+        graph.draw();
+        return;
+      }
+      
+      if (id == "vdegree" && value) {
+        
+        size.applyDegree2(nodes, edges);
+        
+        graph.updateNodes(nodes, ["size"]);
+        graph.draw();
+        return;
+      }
+      
+      size.applyDefaultSize(nodes);
+      
+      graph.updateNodes(nodes, ["size"]);
+      graph.draw();
+      
     });
     
-    $('#w').slider().on('slide', function(ev){
-      
-      attrs.edgeWeightInfluence = ev.value;
-      
-      attrs.sigInst.changeSettings({
-        strongGravityMode: attrs.strongGravityMode,
-        gravity: attrs.gravity,
-        linLogMode: attrs.linLogMode,
-        edgeWeightInfluence: attrs.edgeWeightInfluence
-      });
-    });
-    */
-    
-    slider('#l').slider().on('slide', function(ev){
-      
-      attrs.l = ev.value;
-      console.log(attrs.l);
+    slider("#exposed_period").noUiSlider({
+      range: [1, 10],
+      start: attrs.exposed_period,
+      handles: 1,
+      serialization: {
+        to: [$('#exposed_period_input')]
+        ,resolution: 1
+      },
+      slide: function() {
+        
+        attrs.exposed_period = $(this).val();
+      }
     });
     
-    slider('#d').slider().on('slide', function(ev){
-      
-      attrs.d = ev.value;
-      console.log(attrs.d);
+    slider("#infectious_period").noUiSlider({
+      range: [1, 10],
+      start: attrs.infectious_period,
+      handles: 1,
+      serialization: {
+        to: [$('#infectious_period_input')]
+        ,resolution: 1
+      },
+      slide: function() {
+        
+        attrs.infectious_period = $(this).val();
+      }
     });
     
-    slider('#i').slider().on('slide', function(ev){
-      
-      attrs.interval = ev.value * 1000;
-      console.log(attrs.interval);
+    slider("#visualize_speed").noUiSlider({
+      range: [1, 10],
+      start: attrs.interval,
+      handles: 1,
+      serialization: {
+        to: [$('#visualize_speed_input')]
+        ,resolution: 1
+      },
+      slide: function() {
+        
+        attrs.interval = $(this).val();
+      }
     });
+    
+    slider("#affect_probability").noUiSlider({
+      range: [0, 1],
+      start: attrs.probability,
+      handles: 1,
+      serialization: {
+        to: [$('#affect_probability_input')]
+        ,resolution: .1
+      },
+      slide: function() {
+        
+        attrs.probability = $(this).val();
+      }
+    });
+    
+    var last, current;
+    slider("#replay_slider").noUiSlider({
+      range: [1, 100],
+      start: 0,
+      step: 1,
+      handles: 1,
+      serialization: {
+        to: [$('#replay_slider_input')]
+        ,resolution: 1
+      },
+      slide: function() {
+        
+        if ((current = parseInt($(this).val())) != last) {
+          
+          video.draw(current);
+          last = current;
+        }
+      }
+    });
+    
+   
+    
     
     //generateTestCase();
   });

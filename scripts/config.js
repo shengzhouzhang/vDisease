@@ -8,7 +8,8 @@ require.config({
     jquery: "./libs/jquery/jquery-2.0.3.min",
     
     bootstrap: "./libs/bootstrap/js/bootstrap.min",
-    slider: "./libs/slider/js/bootstrap-slider",
+    //slider: "./libs/slider/js/bootstrap-slider",
+    slider: "./libs/nouislider/jquery.nouislider.min",
     switcher: "./libs/bootstrap/js/bootstrap-switch.min",
     'file-input': "./libs/bootstrap/js/bootstrap_file_input.min"
   }
