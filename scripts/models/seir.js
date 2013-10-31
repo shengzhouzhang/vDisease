@@ -25,12 +25,26 @@ function($, attrs, log, graph) {
     recovered: "rgba(220,220,220,1)"
   };
   
+  SEIR.remove = function(type, id) {
+    
+    this[type][id] = undefined;
+    this[type]["length"]--;
+  };
+  
+  SEIR.add = function(type, id) {
+    
+    this[type][id] = true;
+    this[type]["length"]++;
+  };
+  
   SEIR.initial = function (graph, options) {
     
-    this.susceptible = [];
-    this.exposed = [];
-    this.infectious = [];
-    this.recovered = [];
+    this.exposed = {length: 0};
+    this.infectious = {length: 0};
+    this.recovered = {length: 0};
+    this.susceptible = {length: 0};
+    this.edgesBySource = {};
+    
     this.graph = graph;
     
     this.timer = 0;
@@ -50,16 +64,16 @@ function($, attrs, log, graph) {
           switch(item) {
               
             case "susceptible":
-              seir.susceptible.push(node);
+              seir.add("susceptible", node);
               break;
             case "exposed":
-              seir.exposed.push(node);
+              seir.add("exposed", node);
               break;
             case "infectious":
-              seir.infectious.push(node);
+              seir.add("infectious", node);
               break;
             case "recovered":
-              seir.recovered.push(node);
+              seir.add("recovered", node);
               break;
             default:
               break;
@@ -69,10 +83,10 @@ function($, attrs, log, graph) {
     }
     
     // if no infectious nodes given, choose a random node
-    if (seir.infectious.length == 0) {
+    if (seir.infectious["length"] == 0) {
       
       var node = Math.round(Math.random() * this.nodes.length);
-      seir.infectious.push(node.toString());
+      seir.add("infectious", node.toString());
     }
     
     // push every nodes that is not an infectious into susceptible nodes
@@ -80,11 +94,11 @@ function($, attrs, log, graph) {
       
       node.timer = 0;
       
-      if (seir.exposed.indexOf(node.id) < 0 &&
-          seir.infectious.indexOf(node.id) < 0 &&
-          seir.recovered.indexOf(node.id) < 0) {
+      if (!seir.exposed[node.id] &&
+          !seir.infectious[node.id] &&
+          !seir.recovered[node.id]) {
         
-        seir.susceptible.push(node.id);
+        seir.add("susceptible", node.id);
       }
     });
     
@@ -93,6 +107,12 @@ function($, attrs, log, graph) {
       
       edge.color = seir.colors.susceptible;
       edge.hidden = false;
+      
+      // create a hash table for edges
+      if (!seir.edgesBySource[edge.source])
+        seir.edgesBySource[edge.source] = [edge];
+      else
+        seir.edgesBySource[edge.source].push(edge);
     });
     
     attrs.showEdges = true;
@@ -106,7 +126,6 @@ function($, attrs, log, graph) {
     // take a initial snapshot
     graph.snapshot(seir.timer);
     
-    
     attrs.interval = setInterval(function() {
       
       if (attrs.isRun === true) {
@@ -116,17 +135,18 @@ function($, attrs, log, graph) {
         seir.edges.forEach(function(edge) {
           
           // get infection
-          if(seir.infectious.indexOf(edge.source) >= 0 && 
-             (index = seir.susceptible.indexOf(edge.target)) >= 0 &&
+          if(seir.infectious[edge.source] && 
+             seir.susceptible[edge.target] &&
              Math.random() < (attrs.probability == 0.0 ? edge.probability : attrs.probability)) {
             
+            //console.log(1);
             log.write(seir.timer + "\t" + edge.source + "\t" + edge.target);
             
             // remove from susceptible nodes
-            seir.susceptible.splice(index, 1);
+            seir.remove("susceptible", edge.target);
             
             // push to exposed nodes, edge.target is only the id of the node
-            seir.exposed.push(edge.target);
+            seir.add("exposed", edge.target);
             
             // change edge color
             edge.color = seir.colors.infectious;
@@ -149,7 +169,8 @@ function($, attrs, log, graph) {
   
     var seir = this;
     
-    if (seir.infectious.length == 0 && seir.exposed.length == 0) {
+    if (seir.infectious["length"] == 0 && 
+        seir.exposed["length"] == 0) {
     
       attrs.isRun = false;
       delete attrs.interval;
@@ -160,15 +181,15 @@ function($, attrs, log, graph) {
     
     var index, seir = this;
     
-    seir.updateInfo({s: seir.susceptible.length, e: seir.exposed.length, i: seir.infectious.length, r: seir.recovered.length, days: seir.timer});
+    seir.updateInfo({s: seir.susceptible["length"], e: seir.exposed["length"], i: seir.infectious["length"], r: seir.recovered["length"], days: seir.timer});
     
     seir.nodes.forEach(function(node){
       
-      if ((index = seir.susceptible.indexOf(node.id)) >= 0) {
+      if (seir.susceptible[node.id]) {
         
         node.timer = 0;
         
-      } else if ((index = seir.exposed.indexOf(node.id)) >= 0) {
+      } else if (seir.exposed[node.id]) {
         
         node.color = seir.colors.exposed;
         node.timer++;
@@ -176,12 +197,12 @@ function($, attrs, log, graph) {
         if (node.timer >= attrs.exposed_period) {
           
           // remove from exposed nodes, and push into infectious nodes
-          seir.exposed.splice(index, 1);
-          seir.infectious.push(node.id);
+          seir.remove("exposed", node.id);
+          seir.add("infectious", node.id);
           node.timer = 0;
         }
         
-      } else if ((index = seir.infectious.indexOf(node.id)) >= 0) {
+      } else if (seir.infectious[node.id]) {
         
         node.color = seir.colors.infectious;
         node.timer++;
@@ -189,24 +210,23 @@ function($, attrs, log, graph) {
         if (node.timer >= attrs.infectious_period) {
           
           // remove from infectious nodes, and push into recovered nodes
-          seir.infectious.splice(index, 1);
-          seir.recovered.push(node.id);
+          seir.remove("infectious", node.id);
+          seir.add("recovered", node.id);
           
           node.timer = 0;
         }
         
-      } else if ((index = seir.recovered.indexOf(node.id)) >= 0) {
+      } else if (seir.recovered[node.id]) {
         
         node.color = seir.colors.recovered;
         node.timer = 0;
         
         // change edge's color if the node is recovered
-        seir.edges.forEach(function(edge) {
-          
-          if (edge.source === node.id) {
+        if (seir.edgesBySource[node.id])
+          seir.edgesBySource[node.id].forEach(function(edge) {
+            
             edge.color = seir.colors.recovered;
-          }
-        });
+          });
       }
     });
     
@@ -233,7 +253,6 @@ function($, attrs, log, graph) {
     if (options.r !== undefined)
       $("#recovered").html(options.r);
   };
-
   
   return SEIR;
 });
