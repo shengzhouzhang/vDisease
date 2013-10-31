@@ -4,12 +4,13 @@ define([
   "jquery",
   
   // models
+  "models/attrs",
+  "models/graph/video",
   "models/graph/size",
-  //"models/graph/layout/degree",
   "models/graph/layout/circle"
 ],
        
-function(jquery, degree, circle) {
+function(jquery, attrs, video, size, circle) {
   
   var graph = {
     
@@ -39,8 +40,6 @@ function(jquery, degree, circle) {
         
         this.sigInst.addNode(node.id, {
           label: node.id,
-          //x: this.positionX(count++, length, radius),
-          //y: this.positionY(count++, length, radius),
           x: node.x,
           y: node.y,
           size: node.size,
@@ -61,11 +60,12 @@ function(jquery, degree, circle) {
           size: 2, 
           probability: edge.probability,
           weight: edge.weight,
+          color: edge.color,
           hidden: edge.hidden
         });
       }
-     
-      //this.initialForceAtlas2(nodes);
+      
+      this.showNeighbor();
       
       this.startForceAtlas2();
     },
@@ -104,17 +104,14 @@ function(jquery, degree, circle) {
         
         if (result.length !== 0) {
           
-          for (var item in result[0]) {
-            
-            edge[item] = result[0][item];
-          } 
+          edge.color = result[0].color;
+          edge.hidden = result[0].hidden;
         }
       });
     },
     
     draw: function() {
       
-      //this.hasStartedForceAtlas2 = undefined;
       this.sigInst.draw();
     },
     
@@ -198,6 +195,9 @@ function(jquery, degree, circle) {
       
       this.sigInst.bind('overnodes', function(event){
         
+        if (!attrs.showEdges)
+          return;
+            
         var nodes = event.content;
         
         var neighbors = {};
@@ -209,23 +209,23 @@ function(jquery, degree, circle) {
             neighbors[e.source] = 1;
             neighbors[e.target] = 1;
             
-            e.hidden = 0;
+            graph.fadeIn(e, .8);
+            
           } else {
             
-            e.hidden = 1;
+            graph.fadeOut(e, .1);
           }
           
         }).iterNodes(function(n){
           
           if (!neighbors[n.id]) {
             
-            n.hidden = 1;
+            graph.fadeOut(n, .1);
             n.forceLabel = 0;
             
           } else {
             
-            n.hidden = 0;
-            n.forceLabel = 1;
+            graph.fadeIn(n, 1);
           }
           
         }).draw(2, 2, 2);
@@ -233,18 +233,44 @@ function(jquery, degree, circle) {
         
       }).bind('outnodes',function() {
         
+        if (!attrs.showEdges)
+          return;
+        
         graph.sigInst.iterEdges(function(e) {
           
-          e.hidden = 0;
+          graph.fadeIn(e, .5);
           
         }).iterNodes(function(n) {
           
-          n.hidden = 0;
-          n.forceLabel = 0;
+          graph.fadeIn(n, 1);
           
         }).draw(2, 2, 2);
       });
     },
+    
+    fadeIn: function(element, opacity) {
+      
+      var values = element.color.substring(element.color.indexOf("(") + 1, element.color.length - 1).split(",");
+      
+      element.color = ["rgba(", values[0], ",", values[1], ",", values[2], ",", opacity, ")"].join("");
+    },
+    
+    fadeOut: function(element, opacity) {
+      
+      var values = element.color.substring(element.color.indexOf("(") + 1, element.color.length - 1).split(",");
+      
+      element.color = ["rgba(", values[0], ",", values[1], ",", values[2], ",", opacity, ")"].join("");
+    },
+    
+    snapshot: function(timestamp) {
+      
+      video.capture(this.sigInst, timestamp);
+    },
+    
+    replay: function(timestamp) {
+    
+      video.draw(timestamp);
+    }
   };
   
   return graph;

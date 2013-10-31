@@ -17,7 +17,6 @@
     <link href="css/slider/css/slider.css" rel="stylesheet">
     <link href="css/nouislider/jquery.nouislider.min.css" rel="stylesheet">
     
-    
   </head>
 
   <body>
@@ -59,13 +58,14 @@
             </li>
             <li>
               <form class="navbar-form navbar-left" role="search">
-                <a data-toggle="modal" href="#editModal" class="btn btn-default"><span class="glyphicon glyphicon-cog"></span> Edit</a>
+                <button type="submit" class="btn btn-default run"><span class="glyphicon glyphicon-play"></span> Run</button>
+                <button type="submit" class="btn btn-default stop"><span class="glyphicon glyphicon-stop"></span> Stop</button>
               </form>
             </li>
             <li>
               <form class="navbar-form navbar-left" role="search">
-                <button type="submit" class="btn btn-default run"><span class="glyphicon glyphicon-play"></span> Run</button>
-                <button type="submit" class="btn btn-default stop"><span class="glyphicon glyphicon-stop"></span> Stop</button>
+                <a data-toggle="modal" href="#editModal" class="btn btn-default"><span class="glyphicon glyphicon-cog"></span> SEIR</a>
+                <a data-toggle="modal" href="#graphModal" class="btn btn-default"><span class="glyphicon glyphicon-adjust"></span> Graph</a>
               </form>
             </li>
             <li>
@@ -91,8 +91,8 @@
           <div class="alert alert-info">
             <table class="info">
               <tr>
-                <td><span>Nodes:</span><span id="nodes"></span></td>
-                <td><span>Edges:</span><span id="edges"></span></td>
+                <!-- <td><span>Nodes:</span><span id="nodes"></span></td>
+                <td><span>Edges:</span><span id="edges"></span></td> -->
                 <td><span>Days:</span><span id="days"></span></td>
                 <td><span>S:</span><span id="susceptible"></span></td>
                 <td><span>E:</span><span id="exposed"></span></td>
@@ -217,12 +217,14 @@
               <h4 class="modal-title">Screen Captures</h4>
             </div>
             <div class="modal-body">
-              <img id="replay" />
+              <div id="replay"></div>
               <div class="col-lg-12 control-content">
-                <div id="replay_slider" class="slider"></div>
-                <input type="text" id="replay_slider_input" class="slider-input">
+                
+                <div id="replay_slider" class="slider replay"></div>
+                <input type="text" id="replay_slider_input" class="slider-input replay">
+                <button class="btn btn-default replay"><span class="glyphicon glyphicon-play"></span></button>
+                <button id="svgDownload" class="btn btn-default replay"><span class="glyphicon glyphicon-download-alt"></span></button>
               </div>
-              <!-- <canvas id="replay"></canvas> -->
             </div>
           </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->

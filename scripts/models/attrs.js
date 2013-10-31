@@ -6,8 +6,9 @@ function() {
 
   var attrs = {
     layout: "ForceAtlas2",
-    color: "#339999",
-    size: 4,
+    nodeColor: "rgba(15,125,160,1)",
+    edgeColor: "rgba(15,125,160,.5)",
+    size: 3,
     min: 2,
     max: 10,
     stop: 0,

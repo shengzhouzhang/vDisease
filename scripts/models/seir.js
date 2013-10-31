@@ -6,11 +6,10 @@ define([
   // models
   "models/attrs",
   "models/log",
-  "models/video",
   "models/graph/graph"
 ],
 
-function($, attrs, log, video, graph) {
+function($, attrs, log, graph) {
   
   var SEIR = {};
   
@@ -20,11 +19,10 @@ function($, attrs, log, video, graph) {
   };
   
   SEIR.colors = {
-    initial: attrs.color,
-    susceptible: "#A0A0A0",
-    exposed: "#FFCC00",
-    infectious: "#CC0000",
-    recovered: "#A0A0A0"
+    susceptible: "rgba(15,125,160,.2)",
+    exposed: "rgba(255,200,0,1)",
+    infectious: "rgba(180,50,10,1)",
+    recovered: "rgba(220,220,220,1)"
   };
   
   SEIR.initial = function (graph, options) {
@@ -96,6 +94,8 @@ function($, attrs, log, video, graph) {
       edge.color = seir.colors.susceptible;
       edge.hidden = false;
     });
+    
+    attrs.showEdges = true;
   };
   
   SEIR.interval = function() {
@@ -103,10 +103,15 @@ function($, attrs, log, video, graph) {
     var index, seir = this;
     
     seir.update();
+    // take a initial snapshot
+    graph.snapshot(seir.timer);
+    
     
     attrs.interval = setInterval(function() {
       
       if (attrs.isRun === true) {
+        
+        seir.checkLive();
         
         seir.edges.forEach(function(edge) {
           
@@ -130,12 +135,25 @@ function($, attrs, log, video, graph) {
         
         // day +1
         seir.timer++;
-        
         // infection
         seir.update();
+        
+        // take a snapshot
+        graph.snapshot(seir.timer);
       }
       
     }, attrs.interval * 1000);
+  };
+  
+  SEIR.checkLive = function() {
+  
+    var seir = this;
+    
+    if (seir.infectious.length == 0 && seir.exposed.length == 0) {
+    
+      attrs.isRun = false;
+      delete attrs.interval;
+    }
   };
   
   SEIR.update = function() {
@@ -201,11 +219,13 @@ function($, attrs, log, video, graph) {
   
   SEIR.updateInfo = function(options) {
     
+    /*
     if (options.nodes !== undefined)
       $("#nodes").html(options.nodes);
     
     if (options.edges !== undefined)
       $("#edges").html(options.edges);
+    */
     
     if (options.days !== undefined)
       $("#days").html(options.days);
@@ -222,7 +242,7 @@ function($, attrs, log, video, graph) {
     if (options.r !== undefined)
       $("#recovered").html(options.r);
     
-    video.capture(options);
+    //graph.snapshot(options.days);
   };
 
   

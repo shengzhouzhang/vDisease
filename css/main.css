@@ -13,7 +13,17 @@ div.container {
   
   height: 480px;
   width: 100%;
-  /*background-color: black;*/
+}
+
+#replay {
+
+  position:relative; width:700px; height:400px;
+  margin:0 auto 
+}
+
+svg {
+  position:absolute; 
+  background: white;
 }
 
 div#canvas.showbg {
@@ -66,11 +76,6 @@ div.replay {
   
  width: 800px; 
 }
-#replay {
- 
- width: 100%;
- height: 400px; 
-}
 
 .slider {
  
@@ -82,12 +87,13 @@ div.replay {
   height: 40px;
   width: 40px;
   text-align: center;
-  margin-left: 30px;
 }
 
 #replay_slider {
 
   width: 400px;
+  margin-left: 20px;
+  margin-right: 20px;
 }
 
 #graph {
@@ -104,4 +110,9 @@ table.frontPanel {
 table.frontPanel td{
  
   padding-bottom: 10px;
+}
+
+button.replay {
+  
+  margin-left: 20px;
 }

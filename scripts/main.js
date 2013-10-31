@@ -6,7 +6,8 @@ require([
   "switcher",
   
   "models/log",
-  "models/video",
+  //"models/video",
+  //"models/svg",
   "models/attrs",
   "models/file",
   "models/seir",
@@ -17,7 +18,7 @@ require([
   
 ],
 
-function($, bootstrap, slider, switcher, log, video, attrs, file, seir, graph, size, spiral, circle) {
+function($, bootstrap, slider, switcher, log, attrs, file, seir, graph, size, spiral, circle) {
 
 
   $(document).ready(function() {
@@ -99,7 +100,7 @@ function($, bootstrap, slider, switcher, log, video, attrs, file, seir, graph, s
     });
     
     // start button
-    var isStarted = false;
+    var hasStarted = false;
     attrs.isRun = false;
     
     $("button.run").click(function(event) {
@@ -108,7 +109,7 @@ function($, bootstrap, slider, switcher, log, video, attrs, file, seir, graph, s
       
       if (hasLoaded) {
         
-        if (!attrs.isRun && !isStarted) {
+        if (!attrs.isRun && !hasStarted) {
           
           graph.stopForceAtlas2();
           
@@ -125,6 +126,7 @@ function($, bootstrap, slider, switcher, log, video, attrs, file, seir, graph, s
           });
           
           seir.start();
+          hasStarted = true;
         };
         
         attrs.isRun = !attrs.isRun;
@@ -200,7 +202,11 @@ function($, bootstrap, slider, switcher, log, video, attrs, file, seir, graph, s
     
       event.preventDefault();
       
-      window.open("data:application/octet-stream," + encodeURIComponent(log.download()));
+      var link = document.createElement("a");
+      link.download = "log.txt";
+      link.href = "data:text/plain," + log.download()
+
+      link.click();
     });
     
     // radio button
@@ -340,7 +346,7 @@ function($, bootstrap, slider, switcher, log, video, attrs, file, seir, graph, s
     
     var last, current;
     slider("#replay_slider").noUiSlider({
-      range: [1, 100],
+      range: [0, 99],
       start: 0,
       step: 1,
       handles: 1,
@@ -352,16 +358,57 @@ function($, bootstrap, slider, switcher, log, video, attrs, file, seir, graph, s
         
         if ((current = parseInt($(this).val())) != last) {
           
-          video.draw(current);
+          graph.replay(current);
           last = current;
         }
       }
     });
     
-   
+    $("#video").click(function() {
+      
+      if (!seir.timer)
+        return;
+      
+      var options = {
+        range: [0, 99],
+        start: 0,
+        step: 1,
+        handles: 1,
+        serialization: {
+          to: [$('#replay_slider_input')]
+          ,resolution: 1
+        },
+        slide: function() {
+          
+          if ((current = parseInt($(this).val())) != last) {
+            
+            graph.replay(current);
+            last = current;
+          }
+        }
+      };
+        
+      function updateSlider( slider, newOptions ){
+        var settings = $.extend({}, options, newOptions),
+            current = slider.val();
+        return slider.empty().noUiSlider(settings).val(current, true);
+      }
+      
+      updateSlider(slider("#replay_slider"), {
+        range: [0, seir.timer],
+      });
+    });
     
-    
-    //generateTestCase();
+    $("#svgDownload").click(function(event) {
+      
+      event.preventDefault();
+      
+      var link = document.createElement("a");
+      link.download = "day_" + current + ".svg";
+      link.href = "data:image/svg+xml," + $("#replay").html();
+
+      link.click();
+    });
   });
   
 });

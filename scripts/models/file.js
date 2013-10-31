@@ -38,7 +38,7 @@ function($, attrs) {
           x: 0,
           y: 0,
           size: 2,
-          color: attrs.color,
+          color: attrs.nodeColor,
           forceLables: false,
         });
       }
@@ -52,7 +52,7 @@ function($, attrs) {
           x: 0,
           y: 0,
           size: 2,
-          color: attrs.color,
+          color: attrs.nodeColor,
           forceLabel: false,
         });
       }
@@ -62,6 +62,7 @@ function($, attrs) {
         source: values[0],
         target: values[1],
         probability: values[2],
+        color: attrs.edgeColor,
         hidden: true
       });
       
