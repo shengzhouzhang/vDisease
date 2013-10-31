@@ -166,7 +166,6 @@ function($, attrs, log, graph) {
       
       if ((index = seir.susceptible.indexOf(node.id)) >= 0) {
         
-        //node.color = seir.colors.susceptible;
         node.timer = 0;
         
       } else if ((index = seir.exposed.indexOf(node.id)) >= 0) {
@@ -219,14 +218,6 @@ function($, attrs, log, graph) {
   
   SEIR.updateInfo = function(options) {
     
-    /*
-    if (options.nodes !== undefined)
-      $("#nodes").html(options.nodes);
-    
-    if (options.edges !== undefined)
-      $("#edges").html(options.edges);
-    */
-    
     if (options.days !== undefined)
       $("#days").html(options.days);
     
@@ -241,8 +232,6 @@ function($, attrs, log, graph) {
     
     if (options.r !== undefined)
       $("#recovered").html(options.r);
-    
-    //graph.snapshot(options.days);
   };
 
   

@@ -14,6 +14,11 @@ function(jquery, attrs, video, size, circle) {
   
   var graph = {
     
+    // keep a reference for every node
+    nodeHash: null,
+    // keep a reference for every edge
+    edgeHash: null,
+    
     initial: function(nodes, edges, options) {
       
       var i, node, edge, count = 0, length = nodes.length, radius = 200;
@@ -34,6 +39,9 @@ function(jquery, attrs, video, size, circle) {
       
       circle.initial(nodes);
       
+      // create a hash table for performance
+      this.nodeHash = {};
+      
       for (i = 0; i < nodes.length; i++) {
         
         node = nodes[i];
@@ -50,7 +58,12 @@ function(jquery, attrs, video, size, circle) {
           d: attrs.d, 
           timer: 0
         });
+        
+        this.nodeHash[node.id] = node;
       }
+      
+      // create a hash table for performance
+      this.edgeHash = {};
       
       for(i = 0; i < edges.length; i++) {
         
@@ -63,6 +76,8 @@ function(jquery, attrs, video, size, circle) {
           color: edge.color,
           hidden: edge.hidden
         });
+        
+        this.edgeHash[edge.id] = edge;
       }
       
       this.showNeighbor();
@@ -70,43 +85,28 @@ function(jquery, attrs, video, size, circle) {
       this.startForceAtlas2();
     },
     
-    updateNodes: function(nodes, attrs) {
+    updateNodes: function(undefined, attrs) {
       
-      var i, item;
+      var i, item, graph = this;
       
       this.sigInst.iterNodes(function(node) {
         
-        var result = $.grep(nodes, function(item) {
+        for (i = 0; i < attrs.length; i++) {
           
-          return item.id == node.label;
-        });
-        
-        if (result.length !== 0) {
-          
-          for (i = 0; i < attrs.length; i++) {
-            
-            item = attrs[i];
-            
-            node[item] = result[0][item];
-          } 
+          item = attrs[i];
+          node[item] = graph.nodeHash[node.id][item];
         }
       });
     },
     
-    updateEdges: function(edges) {
+    updateEdges: function(undefined) {
+      
+      var graph = this;
       
       this.sigInst.iterEdges(function(edge) {
         
-        var result = $.grep(edges, function(item) {
-          
-          return item.id == edge.id;
-        });
-        
-        if (result.length !== 0) {
-          
-          edge.color = result[0].color;
-          edge.hidden = result[0].hidden;
-        }
+        edge.color = graph.edgeHash[edge.id].color;
+        edge.hidden = graph.edgeHash[edge.id].hidden;
       });
     },
     
