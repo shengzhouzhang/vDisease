@@ -299,6 +299,7 @@ function($, bootstrap, slider, switcher, log, attrs, file, seir, graph, size, sp
       slide: function() {
         
         attrs.exposed_period = $(this).val();
+        attrs.save();
       }
     });
     
@@ -313,6 +314,7 @@ function($, bootstrap, slider, switcher, log, attrs, file, seir, graph, size, sp
       slide: function() {
         
         attrs.infectious_period = $(this).val();
+        attrs.save();
       }
     });
     
@@ -327,6 +329,7 @@ function($, bootstrap, slider, switcher, log, attrs, file, seir, graph, size, sp
       slide: function() {
         
         attrs.interval = $(this).val();
+        attrs.save();
       }
     });
     
@@ -336,12 +339,19 @@ function($, bootstrap, slider, switcher, log, attrs, file, seir, graph, size, sp
       handles: 1,
       serialization: {
         to: [$('#affect_probability_input')]
-        ,resolution: .1
+        ,resolution: .01
       },
       slide: function() {
         
         attrs.probability = $(this).val();
+        attrs.save();
       }
+    });
+
+    $('#affect_probability_input').change(function() {
+
+        attrs.probability = Number($(this).val());
+        attrs.save();
     });
     
     var last, current;
@@ -395,7 +405,7 @@ function($, bootstrap, slider, switcher, log, attrs, file, seir, graph, size, sp
       }
       
       updateSlider(slider("#replay_slider"), {
-        range: [0, seir.timer],
+        range: [0, seir.timer]
       });
     });
     
