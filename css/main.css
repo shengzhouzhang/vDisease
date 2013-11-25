@@ -89,6 +89,10 @@ div.replay {
   text-align: center;
 }
 
+#affect_probability_input {
+    width: 60px;
+}
+
 #replay_slider {
 
   width: 400px;

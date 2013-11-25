@@ -31,7 +31,7 @@ function() {
             localStorage.clear();
             localStorage.exposed_period = this.exposed_period;
             localStorage.infectious_period = this.infectious_period;
-            localStorage.interval = this.interval;
+            localStorage.interval_value = this.interval;
             localStorage.probability = this.probability;
         }
     },
@@ -45,8 +45,13 @@ function() {
             if (localStorage.infectious_period != undefined)
                 this.infectious_period = Number(localStorage.infectious_period);
 
-            if (localStorage.interval != undefined)
-                this.interval = Number(localStorage.interval);
+            if (localStorage.interval_value != undefined) {
+                var value = Number(localStorage.interval_value);
+                if (isNaN(value)) {
+                    this.interval = localStorage.interval_value;
+                }
+            }
+
 
             if (localStorage.probability != undefined)
                 this.probability = Number(localStorage.probability);

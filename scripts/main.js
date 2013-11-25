@@ -339,7 +339,7 @@ function($, bootstrap, slider, switcher, log, attrs, file, seir, graph, size, sp
       handles: 1,
       serialization: {
         to: [$('#affect_probability_input')]
-        ,resolution: .01
+        ,resolution: .001
       },
       slide: function() {
         
