@@ -46,10 +46,7 @@ function() {
                 this.infectious_period = Number(localStorage.infectious_period);
 
             if (localStorage.interval_value != undefined) {
-                var value = Number(localStorage.interval_value);
-                if (isNaN(value)) {
-                    this.interval = localStorage.interval_value;
-                }
+                this.interval = Number(localStorage.interval_value);
             }
 
 
