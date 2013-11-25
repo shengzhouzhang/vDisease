@@ -9,7 +9,6 @@ define([
     
     write: function(msg) {
 
-      console.log(msg);
       this.logs.push(msg);
     },
     
@@ -20,9 +19,9 @@ define([
     
     download: function() {
       
-      var stream = this.logs.join("\n");
+      var stream = this.logs.join("\r\n");
 
-        console.log(JSON.stringify(stream));
+      console.log(JSON.stringify(stream));
       return stream;
     }
   };

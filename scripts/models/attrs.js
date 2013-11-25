@@ -37,22 +37,24 @@ function() {
     },
     load: function() {
 
-        if(typeof(localStorage)!== undefined) {
+        if(typeof(localStorage) !== 'undefined') {
 
-            if (localStorage.exposed_period != undefined)
+            if (localStorage.exposed_period !== 'undefined')
                 this.exposed_period = Number(localStorage.exposed_period);
 
-            if (localStorage.infectious_period != undefined) {
+            if (localStorage.infectious_period !== 'undefined') {
                 this.infectious_period = Number(localStorage.infectious_period);
             }
 
-            if (localStorage.interval_value != undefined) {
+            if (localStorage.interval_value !== 'undefined') {
                 this.interval = Number(localStorage.interval_value);
+                console.log(this.interval);
             }
 
 
-            if (localStorage.probability != undefined)
+            if (localStorage.probability !== 'undefined') {
                 this.probability = Number(localStorage.probability);
+            }
         }
     }
   };

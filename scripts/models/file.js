@@ -14,7 +14,8 @@ function($, attrs) {
     
     var nodes_raw = attrs.nodes;
     var edges_raw = attrs.edges;
-    
+
+    console.log(JSON.stringify(data));
     var spliter = "\t";
     
     var lines = data.split(/\r\n|\r|\n/g);

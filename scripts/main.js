@@ -204,7 +204,7 @@ function($, bootstrap, slider, switcher, log, attrs, file, seir, graph, size, sp
       
       var link = document.createElement("a");
       link.download = "log.txt";
-      link.href = "data:text/plain," + log.download()
+      link.href = "data:text/plain;base64," + btoa(log.download());
 
       link.click();
     });
