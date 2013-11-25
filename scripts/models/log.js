@@ -20,7 +20,7 @@ define([
     
     download: function() {
       
-      var stream = this.logs.join("\r\n");
+      var stream = this.logs.join("\n");
 
         console.log(JSON.stringify(stream));
       return stream;

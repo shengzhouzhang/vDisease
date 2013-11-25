@@ -140,7 +140,7 @@ function($, attrs, log, graph) {
              Math.random() < (attrs.probability == 0.0 ? edge.probability : attrs.probability)) {
             
             //console.log(1);
-            log.write(seir.timer + "    " + edge.source + " " + edge.target);
+            log.write(seir.timer + " " + edge.source + " " + edge.target);
             
             // remove from susceptible nodes
             seir.remove("susceptible", edge.target);
