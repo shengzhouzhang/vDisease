@@ -270,6 +270,11 @@ function(jquery, attrs, video, size, circle) {
     replay: function(timestamp) {
     
       video.draw(timestamp);
+    },
+
+    dump: function(timestamp) {
+
+     return video.data;
     }
   };
   

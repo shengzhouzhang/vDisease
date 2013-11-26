@@ -417,8 +417,25 @@ function($, bootstrap, slider, switcher, log, attrs, file, seir, graph, size, sp
       link.download = "day_" + current + ".svg";
       link.href = "data:image/svg+xml," + $("#replay").html();
 
+
       link.click();
     });
+
+      $("#svgDownloadAll").click(function(event) {
+
+        event.preventDefault();
+
+        var link = document.createElement("a");
+        var zip = new JSZip();
+        var svgList = graph.dump();
+
+        svgList.forEach(function(svg, index) {
+          zip.file("day_" + index + ".svg", svg);
+        });
+        var zipStream = zip.generate();
+        link.href = "data:application/zip;base64," + zipStream;
+        link.click();
+      });
   });
   
 });
