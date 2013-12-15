@@ -102,6 +102,9 @@ function($, bootstrap, slider, switcher, log, attrs, file, seir, graph, size, sp
     // start button
     var hasStarted = false;
     attrs.isRun = false;
+
+    if (localStorage.initialNodes != undefined)
+      $("#infectiousInput").val(localStorage.initialNodes);
     
     $("button.run").click(function(event) {
       
@@ -124,6 +127,8 @@ function($, bootstrap, slider, switcher, log, attrs, file, seir, graph, size, sp
             edges: edges, 
             options: {}
           });
+
+          localStorage.initialNodes = $("#infectiousInput").val();
           
           seir.start();
           hasStarted = true;

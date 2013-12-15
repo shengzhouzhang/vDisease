@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4773d82f-b46e-4ddf-a6de-580d1db78a0d" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/scripts/models/seir.js" afterPath="$PROJECT_DIR$/scripts/models/seir.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/scripts/main.js" afterPath="$PROJECT_DIR$/scripts/main.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="vDisease.iws" />
@@ -30,25 +29,16 @@
       <file leaf-file-name="attrs.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/scripts/models/attrs.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="17" column="9" selection-start="276" selection-end="276" vertical-scroll-proportion="0.0" vertical-offset="23" max-vertical-offset="1080">
+            <state line="31" column="24" selection-start="576" selection-end="588" vertical-scroll-proportion="0.0" vertical-offset="188" max-vertical-offset="1080">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="main.js" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="main.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/scripts/main.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="418" column="0" selection-start="9701" selection-end="9701" vertical-scroll-proportion="0.0" vertical-offset="6023" max-vertical-offset="6690">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="seir.js" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/scripts/models/seir.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="253" column="21" selection-start="6435" selection-end="6447" vertical-scroll-proportion="-13.692307" vertical-offset="3439" max-vertical-offset="4080">
+            <state line="110" column="29" selection-start="2371" selection-end="2371" vertical-scroll-proportion="0.26209047" vertical-offset="1482" max-vertical-offset="6765">
               <folding />
             </state>
           </provider>
@@ -58,15 +48,6 @@
         <entry file="file://$PROJECT_DIR$/scripts/models/graph/graph.js">
           <provider selected="true" editor-type-id="text-editor">
             <state line="276" column="23" selection-start="6445" selection-end="6445" vertical-scroll-proportion="0.0" vertical-offset="3574" max-vertical-offset="4305">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.html" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/index.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="96" column="29" selection-start="4350" selection-end="4350" vertical-scroll-proportion="0.33278146" vertical-offset="1239" max-vertical-offset="3735">
               <folding />
             </state>
           </provider>
@@ -106,9 +87,9 @@
         <option value="$PROJECT_DIR$/scripts/models/file.js" />
         <option value="$PROJECT_DIR$/scripts/models/log.js" />
         <option value="$PROJECT_DIR$/scripts/models/graph/graph.js" />
-        <option value="$PROJECT_DIR$/scripts/main.js" />
         <option value="$PROJECT_DIR$/scripts/models/seir.js" />
         <option value="$PROJECT_DIR$/index.html" />
+        <option value="$PROJECT_DIR$/scripts/main.js" />
       </list>
     </option>
   </component>
@@ -393,9 +374,16 @@
         <state line="7" column="13" selection-start="60" selection-end="60" vertical-scroll-proportion="0.15742129" vertical-offset="0" max-vertical-offset="667" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/models/attrs.js">
+    <entry file="file://$PROJECT_DIR$/scripts/models/graph/video.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="9" selection-start="276" selection-end="276" vertical-scroll-proportion="0.0" vertical-offset="23" max-vertical-offset="1080">
+        <state line="26" column="4" selection-start="388" selection-end="388" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="615">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="103" column="16" selection-start="4722" selection-end="4722" vertical-scroll-proportion="0.5066225" vertical-offset="1239" max-vertical-offset="3735">
           <folding />
         </state>
       </provider>
@@ -407,30 +395,23 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/models/graph/video.js">
+    <entry file="file://$PROJECT_DIR$/scripts/models/seir.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="4" selection-start="388" selection-end="388" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="615">
+        <state line="253" column="21" selection-start="6435" selection-end="6447" vertical-scroll-proportion="0.5553822" vertical-offset="3439" max-vertical-offset="4080">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/models/attrs.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="31" column="24" selection-start="576" selection-end="588" vertical-scroll-proportion="0.0" vertical-offset="188" max-vertical-offset="1080">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/scripts/main.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="418" column="0" selection-start="9701" selection-end="9701" vertical-scroll-proportion="0.0" vertical-offset="6023" max-vertical-offset="6690">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/models/seir.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="253" column="21" selection-start="6435" selection-end="6447" vertical-scroll-proportion="-13.692307" vertical-offset="3439" max-vertical-offset="4080">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="96" column="29" selection-start="4350" selection-end="4350" vertical-scroll-proportion="0.33278146" vertical-offset="1239" max-vertical-offset="3735">
+        <state line="110" column="29" selection-start="2371" selection-end="2371" vertical-scroll-proportion="0.26209047" vertical-offset="1482" max-vertical-offset="6765">
           <folding />
         </state>
       </provider>
