@@ -181,7 +181,13 @@ function($, attrs, log, graph) {
     
     var index, seir = this;
     
-    seir.updateInfo({s: seir.susceptible["length"], e: seir.exposed["length"], i: seir.infectious["length"], r: seir.recovered["length"], days: seir.timer});
+    seir.updateInfo({
+        s: seir.susceptible["length"]+ " (" + Math.round(seir.susceptible["length"] / seir.nodes.length * 100) + "%)",
+        e: seir.exposed["length"] + " (" + Math.round(seir.exposed["length"] / seir.nodes.length * 100) + "%)",
+        i: seir.infectious["length"] + " (" + Math.round(seir.infectious["length"] / seir.nodes.length * 100) + "%)",
+        r: seir.recovered["length"] + " (" + Math.round(seir.recovered["length"] / seir.nodes.length * 100) + "%)",
+        nodes: seir.nodes.length,
+        days: seir.timer});
     
     seir.nodes.forEach(function(node){
       
@@ -240,6 +246,9 @@ function($, attrs, log, graph) {
     
     if (options.days !== undefined)
       $("#days").html(options.days);
+
+    if (options.s !== undefined)
+      $("#nodes").html(options.nodes);
     
     if (options.s !== undefined)
       $("#susceptible").html(options.s);
