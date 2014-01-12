@@ -30,7 +30,7 @@ function($, svg) {
       if (this.data.length > index) {
         $("#replay").html(this.data[index]);
       }
-      console.log(this.data.length + " " + index);
+      //console.log(this.data.length + " " + index);
     }
   };
 });

@@ -21,7 +21,7 @@ define([
       
       var stream = this.logs.join("\r\n");
 
-      console.log(JSON.stringify(stream));
+      //console.log(JSON.stringify(stream));
       return stream;
     }
   };

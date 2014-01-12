@@ -140,7 +140,11 @@ function($, attrs, log, graph) {
              Math.random() < (attrs.probability == 0.0 ? edge.probability : attrs.probability)) {
             
             //console.log(1);
-            log.write(seir.timer + " " + edge.source + " " + edge.target);
+            log.write([
+              seir.timer,
+              edge.source,
+              edge.target
+            ].join(" "));
             
             // remove from susceptible nodes
             seir.remove("susceptible", edge.target);
@@ -152,6 +156,18 @@ function($, attrs, log, graph) {
             edge.color = seir.colors.infectious;
           };
         });
+
+        log.write([
+          "day " + seir.timer + " ends",
+          "susceptible:",
+          Math.round(seir.susceptible["length"] / seir.nodes.length * 100) + "%",
+          "exposed:",
+          Math.round(seir.exposed["length"] / seir.nodes.length * 100) + "%",
+          "infectious:",
+          Math.round(seir.infectious["length"] / seir.nodes.length * 100) + "%",
+          "recovered:",
+          Math.round(seir.recovered["length"] / seir.nodes.length * 100) + "%"
+        ].join(" "));
         
         // day +1
         seir.timer++;

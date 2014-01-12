@@ -295,7 +295,7 @@ function($, bootstrap, slider, switcher, log, attrs, file, seir, graph, size, sp
     
     slider("#exposed_period").noUiSlider({
       range: [1, 10],
-      start: attrs.exposed_period,
+      start: attrs.exposed_period > 0 ? ( attrs.exposed_period < 10 ? attrs.exposed_period : 10 ) : 1,
       handles: 1,
       serialization: {
         to: [$('#exposed_period_input')]
@@ -310,7 +310,7 @@ function($, bootstrap, slider, switcher, log, attrs, file, seir, graph, size, sp
     
     slider("#infectious_period").noUiSlider({
       range: [1, 10],
-      start: attrs.infectious_period,
+      start: attrs.infectious_period > 0 ? ( attrs.infectious_period < 10 ? attrs.infectious_period : 10 ) : 1,
       handles: 1,
       serialization: {
         to: [$('#infectious_period_input')]
@@ -325,7 +325,7 @@ function($, bootstrap, slider, switcher, log, attrs, file, seir, graph, size, sp
     
     slider("#visualize_speed").noUiSlider({
       range: [1, 10],
-      start: attrs.interval,
+      start: attrs.interval > 0 ? ( attrs.interval < 10 ? attrs.interval : 10 ) : 1,
       handles: 1,
       serialization: {
         to: [$('#visualize_speed_input')]
@@ -340,7 +340,7 @@ function($, bootstrap, slider, switcher, log, attrs, file, seir, graph, size, sp
     
     slider("#affect_probability").noUiSlider({
       range: [0, 1],
-      start: attrs.probability,
+      start: attrs.probability > 0 ? ( attrs.probability < 10 ? attrs.probability : 10 ) : 1,
       handles: 1,
       serialization: {
         to: [$('#affect_probability_input')]
@@ -426,21 +426,25 @@ function($, bootstrap, slider, switcher, log, attrs, file, seir, graph, size, sp
       link.click();
     });
 
-      $("#svgDownloadAll").click(function(event) {
+    $("#svgDownload").tooltip({title: "Download Image File"})
 
-        event.preventDefault();
+    $("#svgDownloadAll").click(function(event) {
 
-        var link = document.createElement("a");
-        var zip = new JSZip();
-        var svgList = graph.dump();
+      event.preventDefault();
 
-        svgList.forEach(function(svg, index) {
-          zip.file("day_" + index + ".svg", svg);
-        });
-        var zipStream = zip.generate();
-        link.href = "data:application/zip;base64," + zipStream;
-        link.click();
+      var link = document.createElement("a");
+      var zip = new JSZip();
+      var svgList = graph.dump();
+
+      svgList.forEach(function(svg, index) {
+        zip.file("day_" + index + ".svg", svg);
       });
+      var zipStream = zip.generate();
+      link.href = "data:application/zip;base64," + zipStream;
+      link.click();
+    });
+
+    $("#svgDownloadAll").tooltip({title: "Download Image Zip File"})
   });
   
 });

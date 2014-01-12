@@ -48,7 +48,7 @@ function() {
 
             if (localStorage.interval_value !== 'undefined') {
                 this.interval = Number(localStorage.interval_value);
-                console.log(this.interval);
+                //console.log(this.interval);
             }
 
 
