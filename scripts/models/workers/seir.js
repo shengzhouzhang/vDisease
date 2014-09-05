@@ -66,7 +66,7 @@ SEIR.prototype.interval = function() {
   
   seir.run();
   
-  attrs.interval = setInterval(function() {
+  setInterval(function() {
     
     if (attrs.isRun === true) {
       
